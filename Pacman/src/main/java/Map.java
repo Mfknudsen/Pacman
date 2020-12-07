@@ -8,7 +8,7 @@ public class Map {
 
         for(int x = 0; x < xSize; x++){
             for(int y = 0; y < ySize; y++){
-                tiles[x][y] = new Tile(x * Main.tileSize + Main.tileSize,y * Main.tileSize + Main.tileSize);
+                tiles[x][y] = new Tile(x,y);
             }
         }
     }

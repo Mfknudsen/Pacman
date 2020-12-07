@@ -15,5 +15,10 @@ public class Tile {
     public int getY() {
         return y;
     }
+
+    public Tile[] getTileNeighbors(){
+        return new Tile[] {left, right, top, button};
+    }
+
     //endregion
 }
