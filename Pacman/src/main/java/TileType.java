@@ -1,5 +1,6 @@
 public enum TileType {
     WALKABLE,
     BLOCKED,
-    PORTAL
+    PORTAL,
+    GhostRoom
 }
