@@ -3,7 +3,7 @@ public class PathNode {
     Tile tile;
     float n, h;
 
-    public PathNode(PathNode parent, Tile tile, float n, float h) {
+    public PathNode(PathNode parent, Tile tile) {
         this.parent = parent;
         this.tile = tile;
         this.n = n;
@@ -16,7 +16,13 @@ public class PathNode {
     }
 
     public float getValue(){
-        return n + h;
+        return h;
+    }
+    //endregion
+
+    //region Setters
+    public void setValue(int x, int y){
+        h = (float) Math.sqrt(Math.pow(x - tile.getX(), 2) + Math.pow(y - tile.getY(), 2));
     }
     //endregion
 }
