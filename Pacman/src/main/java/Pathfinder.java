@@ -21,21 +21,22 @@ public class Pathfinder {
         openNodes.add(CreateNodesFromTile(startTile));
 
         //Search the open Nodes until non is left or if a PathNode is create with the end tile
-        while(!pathFound && (openNodes.size() > 0)){
+        while(!pathFound && (openNodes.size() > 0)) {
             PathNode node = FindBestNode(openNodes);
 
-            for (PathNode addition: CreateNodesFromPathNode(node)){
-                openNodes.add(addition);
+            if (node != null) {
+                for (PathNode addition : CreateNodesFromPathNode(node)) {
+                    openNodes.add(addition);
 
-                if(addition.getTile() == endTile)
-                {
-                    pathFound = true;
-                    result.add(addition);
+                    if (addition.getTile() == endTile) {
+                        pathFound = true;
+                        result.add(addition);
+                    }
                 }
-            }
 
-            closedNodes.add(node);
-            openNodes.remove(node);
+                closedNodes.add(node);
+                openNodes.remove(node);
+            }
         }
 
         //Backtrace using parents in the PathNodes
@@ -62,7 +63,7 @@ public class Pathfinder {
         Tile[] neighbors = input.getTile().getTileNeighbors();
 
         for (Tile t: neighbors) {
-            if(t != null) {
+            if(t != null && endTile != null) {
                 if (t.getType() == TileType.WALKABLE && NodeDontExitsInClosed(t)) {
                     PathNode node = new PathNode(input, t);
                     node.setValue(endTile.getX(), endTile.getY());
@@ -97,7 +98,6 @@ public class Pathfinder {
     }
 
     //region Setters
-
     public void setStartTile(Tile startTile) {
         this.startTile = startTile;
     }
@@ -105,6 +105,5 @@ public class Pathfinder {
     public void setEndTile(Tile endTile) {
         this.endTile = endTile;
     }
-
     //endregion
 }

@@ -17,7 +17,7 @@ public class Main extends PApplet {
 
         pathfinder = new Pathfinder();
 
-        pathfinder.setStartTile(map.getTileFromCoordinates(50, 60));
+        pathfinder.setStartTile(map.getTileFromCoordinates(80, 60));
         pathfinder.setEndTile(map.getTileFromCoordinates(980, 940));
 
         pathfinder.FindPath();
@@ -39,62 +39,36 @@ public class Main extends PApplet {
                 if(t.getType() == TileType.BLOCKED)
                     fill(gameMapColorVCX);
 
-                rect((t.getX() * tileSize) + tileSize - (tileSize / 2),
-                        (t.getY() * tileSize) + tileSize - (tileSize / 2),
-                        tileSize,
-                        tileSize);
+                DrawTile(t);
             }
         }
-
-        /*
-        for (PathNode node: pathfinder.closedNodes){
-            rect((node.getTile().getX()  * tileSize) + tileSize - (tileSize/2),
-                    (node.getTile().getY()  * tileSize) + tileSize - (tileSize/2),
-                    tileSize,
-                    tileSize);
-        }
-         */
 
         //Debug Pathfinding
         for(PathNode node: pathfinder.closedNodes){
             Tile t = node.getTile();
 
             fill(255,0,0);
-            rect((t.getX()  * tileSize) + tileSize - (tileSize/2),
-                    (t.getY()  * tileSize) + tileSize - (tileSize/2),
-                    tileSize,
-                    tileSize);
+            DrawTile(t);
         }
         for(PathNode node: pathfinder.openNodes){
             Tile t = node.getTile();
 
             fill(0,0,255);
-            rect((t.getX()  * tileSize) + tileSize - (tileSize/2),
-                    (t.getY()  * tileSize) + tileSize - (tileSize/2),
-                    tileSize,
-                    tileSize);
+            DrawTile(t);
         }
         for(PathNode node: pathfinder.result){
             Tile t = node.getTile();
 
             fill(0,255,255);
-            rect((t.getX()  * tileSize) + tileSize - (tileSize/2),
-                    (t.getY()  * tileSize) + tileSize - (tileSize/2),
-                    tileSize,
-                    tileSize);
+            DrawTile(t);
         }
 
-        Tile t = map.getTileFromCoordinates(50, 60);
+        Tile t = map.getTileFromCoordinates(80, 60);
         fill(0,255,0);
-        rect((t.getX()  * tileSize) + tileSize - (tileSize/2),
-                (t.getY()  * tileSize) + tileSize - (tileSize/2),
-                tileSize,
-                tileSize);
-        t = map.getTileFromCoordinates(980, 940);
-        rect((t.getX()  * tileSize) + tileSize - (tileSize/2),
-                (t.getY()  * tileSize) + tileSize - (tileSize/2),
-                tileSize,
-                tileSize);
+        DrawTile(t);
+
+        t = map.getTileFromCoordinates(mouseX, mouseY);
+        DrawTile(t);
 
         for (Tile[] set: draw){
             for (Tile tile: set){
@@ -111,5 +85,16 @@ public class Main extends PApplet {
 
     public static void main(String[] args){
         PApplet.main("Main");
+    }
+
+    void DrawTile(Tile tile) {
+        int tileSize = Main.tileSize;
+
+        if (tile != null) {
+            rect((tile.getX() * tileSize) + tileSize - (tileSize / 2),
+                    (tile.getY() * tileSize) + tileSize - (tileSize / 2),
+                    tileSize,
+                    tileSize);
+        }
     }
 }

@@ -1,4 +1,4 @@
-public class Map {
+public class Map{
     private Tile[][] tiles;
 
     public void SetupMap(){
@@ -147,24 +147,16 @@ public class Map {
     }
 
     public Tile getTileFromCoordinates(float x, float y){
-        Tile result = null;
-        float dist = 100;
 
         for (Tile[] set: tiles) {
             for (Tile tile: set){
-                float newDist = (float) Math.sqrt(
-                        Math.pow((tile.getX()  * Main.tileSize) + Main.tileSize - (Main.tileSize / 2) - x, 2) +
-                        Math.pow((tile.getY()  * Main.tileSize) + Main.tileSize - (Main.tileSize / 2) - y, 2)
-                );
-
-                if(dist > newDist){
-                    dist = newDist;
-                    result = tile;
-                }
+                if(x >= (tile.getX() * Main.tileSize + Main.tileSize * 0.5f) && x < (tile.getX() * Main.tileSize + Main.tileSize * 1.5f) &&
+                y >= (tile.getY() * Main.tileSize + Main.tileSize * 0.5f) && y < (tile.getY() * Main.tileSize + Main.tileSize * 1.5f))
+                    return tile;
             }
         }
 
-        return result;
+        return null;
     }
     //endregion
 }
