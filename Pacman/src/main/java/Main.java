@@ -39,6 +39,10 @@ public class Main extends PApplet {
                 if(t.getType() == TileType.BLOCKED)
                     fill(gameMapColorVCX);
 
+                // yellow color for ghost room
+                if (t.getType() == TileType.GhostRoom)
+                    fill(255, 255, 0);
+
                 DrawTile(t);
             }
         }

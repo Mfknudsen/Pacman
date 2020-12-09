@@ -119,6 +119,16 @@ public class Map{
 
                     //endregion
 
+                    //region Ghostroom
+                else if (
+                        ((tiles[x][y].getX() >= 13 && tiles[x][y].getX() <= 14) && (tiles[x][y].getY() == 12)) // top blocks (2)
+                                || ((tiles[x][y].getX() >= 11 && tiles[x][y].getX() <= 16) && (tiles[x][y].getY() >= 13 && tiles[x][y].getY() <= 15)) // rest of the room
+
+                )
+                    tiles[x][y].setType(TileType.GhostRoom);
+
+                    //endregion
+
                 else {
                     tiles[x][y].setType(TileType.WALKABLE);
                 }
