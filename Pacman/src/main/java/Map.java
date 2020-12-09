@@ -129,6 +129,14 @@ public class Map{
 
                     //endregion
 
+                    //region Portals
+                else if (
+                        ((tiles[x][y].getX() == 0 || tiles[x][y].getX() == 27) && (tiles[x][y].getY() == 14))
+                )
+                    tiles[x][y].setType(TileType.PORTAL);
+
+                    //endregion
+
                 else {
                     tiles[x][y].setType(TileType.WALKABLE);
                 }

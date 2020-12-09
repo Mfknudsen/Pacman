@@ -43,6 +43,10 @@ public class Main extends PApplet {
                 if (t.getType() == TileType.GhostRoom)
                     fill(255, 255, 0);
 
+                // light green color for portal
+                if (t.getType() == TileType.PORTAL)
+                    fill(145, 255, 187);
+
                 DrawTile(t);
             }
         }
