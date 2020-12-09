@@ -121,8 +121,8 @@ public class Map{
 
                     //region Ghostroom
                 else if (
-                        ((tiles[x][y].getX() >= 13 && tiles[x][y].getX() <= 14) && (tiles[x][y].getY() == 12)) // top blocks (2)
-                                || ((tiles[x][y].getX() >= 11 && tiles[x][y].getX() <= 16) && (tiles[x][y].getY() >= 13 && tiles[x][y].getY() <= 15)) // rest of the room
+                        ((tiles[x][y].getX() >= 13 && tiles[x][y].getX() <= 14) && (tiles[x][y].getY() == 12)) // door
+                                || ((tiles[x][y].getX() >= 11 && tiles[x][y].getX() <= 16) && (tiles[x][y].getY() >= 13 && tiles[x][y].getY() <= 15)) // room
 
                 )
                     tiles[x][y].setType(TileType.GhostRoom);
