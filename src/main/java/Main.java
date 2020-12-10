@@ -2,11 +2,12 @@ import processing.core.PApplet;
 
 public class Main extends PApplet {
     private Map map;
-    public static int size = 40, tileSize = 40;
+    public static int size = 40, tileSize = 30;
     public static int xSize = 28, ySize = 31;
     public static int gameMapColorVCX = 87;
     Pathfinder pathfinder;
     Ghost ghost;
+    Player player1;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -24,6 +25,9 @@ public class Main extends PApplet {
         pathfinder.FindPath();
 
         ghost = new Ghost();
+
+        player1 = new Player();
+        player1.setSpawnPoint(14, 23);
     }
 
     public void draw(){
@@ -34,6 +38,8 @@ public class Main extends PApplet {
                 mouseY
         ));
         pathfinder.FindPath();
+
+        player1.Update();
 
         for (Tile[] tileArr: draw) {
             for (Tile t : tileArr) {
@@ -49,6 +55,9 @@ public class Main extends PApplet {
                 // light green color for portal
                 if (t.getType() == TileType.PORTAL)
                     fill(145, 255, 187);
+
+                if (player1.getX() == t.getX() && player1.getY() == t.getY())
+                    fill(130,30,200);
 
                 DrawTile(t);
             }
@@ -92,6 +101,15 @@ public class Main extends PApplet {
                         (tile.getY()  * tileSize) + tileSize - (tileSize/2) + (tileSize * 0.75f));
             }
         }
+    }
+
+    public void keyPressed(){
+        player1.onKeyPressed(key);
+    }
+
+    public void keyReleased()
+    {
+        player1.onKeyReleased(key);
     }
 
     public static void main(String[] args){
