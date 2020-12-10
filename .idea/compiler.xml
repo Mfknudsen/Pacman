@@ -9,8 +9,5 @@
         <module name="Pacman" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Pacman" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
 </project>

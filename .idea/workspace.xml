@@ -22,20 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b220fcd-647e-401b-96f2-6b3d4d037ea0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pacman.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Ghost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Ghost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Pathfinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Pathfinder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Unit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Unit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Ghost.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Ghost.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Pathfinder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Pathfinder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Unit.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Unit.class" afterDir="false" />
-    </list>
+    <list default="true" id="8b220fcd-647e-401b-96f2-6b3d4d037ea0" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,6 +49,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.15527344" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -90,8 +81,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1607331122966</updated>
+      <workItem from="1607602520443" duration="364000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
