@@ -6,6 +6,22 @@ public class Ghost implements Unit, Scoring{
 
     private int x;
     private int y;
+    private float moveSpeed;
+    private Tile nextMoveTo;
+    private Pathfinder pathfinder;
+
+    public Ghost() {
+        pathfinder = new Pathfinder();
+    }
+
+    public void Update(){
+        if(nextMoveTo == null){
+            nextMoveTo = pathfinder.FindPath()[0].getTile();
+        }
+        else{
+            move();
+        }
+    }
 
     public void setSpawnPoint(int x, int y) {
         this.x = x;
@@ -13,6 +29,25 @@ public class Ghost implements Unit, Scoring{
     }
 
     public void move() {
+        if(x != nextMoveTo.getX()){
+            int dir = -1;
+            if(x < nextMoveTo.getX())
+                dir = 1;
+            x += dir * moveSpeed;
+
+        } else if(y != nextMoveTo.getY()){
+            int dir = -1;
+            if(y < nextMoveTo.getY())
+                dir = 1;
+            y += dir * moveSpeed;
+        }
+
+        if((nextMoveTo.getX() - x) < 0.1f && (nextMoveTo.getY() - y) < 0.1f){
+            nextMoveTo = null;
+        }
+    }
+
+    private void updateTarget(){
 
     }
 

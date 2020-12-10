@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +62,7 @@ public class Pathfinder {
 
         for (Tile t: neighbors) {
             if(t != null && endTile != null) {
-                if (t.getType() == TileType.WALKABLE && NodeDontExitsInClosed(t)) {
+                if ((t.getType() == TileType.WALKABLE || t.getType() == TileType.GhostRoom || t.getType() == TileType.PORTAL) && NodeDontExitsInClosed(t)) {
                     PathNode node = new PathNode(input, t);
                     node.setValue(endTile.getX(), endTile.getY());
                     result.add(node);

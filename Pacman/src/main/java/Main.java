@@ -6,6 +6,7 @@ public class Main extends PApplet {
     public static int xSize = 28, ySize = 31;
     public static int gameMapColorVCX = 87;
     Pathfinder pathfinder;
+    Ghost ghost;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -21,6 +22,8 @@ public class Main extends PApplet {
         pathfinder.setEndTile(map.getTileFromCoordinates(980, 940));
 
         pathfinder.FindPath();
+
+        ghost = new Ghost();
     }
 
     public void draw(){

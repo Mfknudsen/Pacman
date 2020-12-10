@@ -7,6 +7,10 @@ public class Player implements Unit {
     private int x;
     private int y;
 
+    public void Update() {
+
+    }
+
     public void setSpawnPoint(int x, int y) {
         this.x = x;
         this.y = y;
