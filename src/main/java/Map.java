@@ -176,5 +176,9 @@ public class Map{
 
         return null;
     }
+
+    public Tile getTileFromIndex(int x, int y){
+        return tiles[x][y];
+    }
     //endregion
 }

@@ -1,12 +1,11 @@
 import processing.core.PApplet;
 
 public class Main extends PApplet {
-    private Map map;
+    public static Map map;
     public static int size = 40, tileSize = 40;
     public static int xSize = 28, ySize = 31;
     public static int gameMapColorVCX = 87;
-    Pathfinder pathfinder;
-    Ghost ghost;
+    Ghost[] ghost;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -16,24 +15,16 @@ public class Main extends PApplet {
         map = new Map();
         map.SetupMap();
 
-        pathfinder = new Pathfinder();
 
-        pathfinder.setStartTile(map.getTileFromCoordinates(80, 60));
-        pathfinder.setEndTile(map.getTileFromCoordinates(980, 940));
-
-        pathfinder.FindPath();
-
-        ghost = new Ghost();
+        ghost = new Ghost[4];
+        ghost[0] = new Ghost(11,13);
+        ghost[1] = new Ghost(11,15);
+        ghost[2] = new Ghost(16,13);
+        ghost[3] = new Ghost(16,15);
     }
 
     public void draw(){
         Tile[][] draw = map.getTiles();
-
-        pathfinder.setEndTile(map.getTileFromCoordinates(
-                mouseX,
-                mouseY
-        ));
-        pathfinder.FindPath();
 
         for (Tile[] tileArr: draw) {
             for (Tile t : tileArr) {
@@ -54,33 +45,20 @@ public class Main extends PApplet {
             }
         }
 
-        //Debug Pathfinding
-        for(PathNode node: pathfinder.closedNodes){
-            Tile t = node.getTile();
-
-            fill(255,0,0);
-            DrawTile(t);
-        }
-        for(PathNode node: pathfinder.openNodes){
-            Tile t = node.getTile();
-
-            fill(0,0,255);
-            DrawTile(t);
-        }
-        for(PathNode node: pathfinder.result){
-            Tile t = node.getTile();
-
-            fill(0,255,255);
-            DrawTile(t);
-        }
-
-        Tile t = map.getTileFromCoordinates(80, 60);
         fill(0,255,0);
+        Tile t = map.getTileFromCoordinates(mouseX, mouseY);
         DrawTile(t);
 
-        t = map.getTileFromCoordinates(mouseX, mouseY);
-        DrawTile(t);
+        for (Ghost g: ghost) {
+            if (g != null) {
+                g.setCurrent(map.getTileFromIndex((int)g.getX(), (int)g.getY()));
+                g.setTarget(map.getTileFromCoordinates(mouseX, mouseY));
+                g.Update();
+                DrawGhost(g.getX(), g.getY(), g.getSize());
+            }
+        }
 
+        //Debug Coordinates
         for (Tile[] set: draw){
             for (Tile tile: set){
                 fill(0);
@@ -99,13 +77,19 @@ public class Main extends PApplet {
     }
 
     void DrawTile(Tile tile) {
-        int tileSize = Main.tileSize;
-
         if (tile != null) {
             rect((tile.getX() * tileSize) + tileSize - (tileSize / 2),
                     (tile.getY() * tileSize) + tileSize - (tileSize / 2),
                     tileSize,
                     tileSize);
         }
+    }
+
+    void DrawGhost(float x, float y, int size) {
+        fill(0,0,255);
+        rect((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
+                (y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
+                size,
+                size);
     }
 }
