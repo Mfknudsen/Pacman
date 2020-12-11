@@ -50,23 +50,31 @@ public class Player implements Unit {
 
     }
 
-    public void moveLeft()
-    {
+    private void moveLeft() {
+        if ((x - 1) < 0) {
+            return;
+        }
         --x;
     }
 
-    public void moveRight()
-    {
+    private void moveRight() {
+        if ((x + 1) > Main.xSize - 1) {
+        return;
+        }
         ++x;
     }
 
-    public void moveUp()
-    {
+    private void moveUp() {
+        if ((y - 1) < 0) {
+        return;
+        }
         --y;
     }
 
-    public void moveDown()
-    {
+    private void moveDown() {
+        if ((y + 1) > Main.ySize - 1) {
+            return;
+        }
         ++y;
     }
 
