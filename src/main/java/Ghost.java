@@ -51,7 +51,7 @@ public class Ghost implements Unit, Scoring{
                     pathfinder.setStartTile(current);
                     pathfinder.setEndTile(target);
                     currentPath = pathfinder.FindPath();
-                    
+
                     if (currentPath.length > 0)
                         if (currentPath.length > 0)
                             nextMoveTo = currentPath[currentPath.length - 2].getTile();
