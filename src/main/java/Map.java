@@ -146,15 +146,18 @@ public class Map{
         for(int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
                 Tile tile = tiles[x][y];
+                Tile[] neighbors = new Tile[4];
 
                 if(x - 1 >= 0)
-                    tile.setNeighbors(tiles[x - 1][y]);
+                   neighbors[0] = tiles[x - 1][y];
                 if(x + 1 < xSize)
-                    tile.setNeighbors(tiles[x + 1][y]);
+                    neighbors[1] = tiles[x + 1][y];
                 if(y - 1 >= 0)
-                    tile.setNeighbors(tiles[x][y - 1]);
+                    neighbors[2] = tiles[x][y - 1];
                 if(y + 1 < ySize)
-                    tile.setNeighbors(tiles[x][y + 1]);
+                    neighbors[3] = tiles[x][y + 1];
+
+                tile.setNeighbors(neighbors);
             }
         }
     }
