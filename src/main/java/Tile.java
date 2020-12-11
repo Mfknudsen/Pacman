@@ -31,13 +31,8 @@ public class Tile {
         this.type = type;
     }
 
-    public void setNeighbors(Tile toAdd) {
-        for(int i = 0; i < 4; i++){
-            if(neighbors[i] == null) {
-                neighbors[i] = toAdd;
-                break;
-            }
-        }
+    public void setNeighbors(Tile[] toAdd) {
+        neighbors = toAdd;
     }
     //endregion
 }
