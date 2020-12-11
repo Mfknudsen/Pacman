@@ -6,6 +6,7 @@ public class Main extends PApplet {
     public static int xSize = 28, ySize = 31;
     public static int gameMapColorVCX = 87;
     Ghost[] ghost;
+    Player player1;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -21,10 +22,14 @@ public class Main extends PApplet {
         ghost[1] = new Ghost(11,15);
         ghost[2] = new Ghost(16,13);
         ghost[3] = new Ghost(16,15);
+
+        player1 = new Player();
+        player1.setSpawnPoint(14, 23);
     }
 
     public void draw(){
         Tile[][] draw = map.getTiles();
+        player1.Update();
 
         for (Tile[] tileArr: draw) {
             for (Tile t : tileArr) {
@@ -40,6 +45,9 @@ public class Main extends PApplet {
                 // light green color for portal
                 if (t.getType() == TileType.PORTAL)
                     fill(145, 255, 187);
+
+                if (player1.getX() == t.getX() && player1.getY() == t.getY())
+                    fill(130,30,200);
 
                 DrawTile(t);
             }
@@ -70,6 +78,15 @@ public class Main extends PApplet {
                         (tile.getY()  * tileSize) + tileSize - (tileSize/2) + (tileSize * 0.75f));
             }
         }
+    }
+
+    public void keyPressed(){
+        player1.onKeyPressed(key);
+    }
+
+    public void keyReleased()
+    {
+        player1.onKeyReleased(key);
     }
 
     public static void main(String[] args){
