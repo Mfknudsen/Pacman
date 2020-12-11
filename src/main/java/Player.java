@@ -1,13 +1,15 @@
 import java.awt.event.KeyEvent;
 
-public class Player implements Unit {
+public class Player extends Map implements Unit {
 
     // set spawn point (probably x: 13 or 14 and y:23)
     // move animation from one tile to the next
     // collision detection, here?
 
-    private int x;
-    private int y;
+    private float x, y, size = 20;
+    private Tile currentTile;
+    private Tile nextMoveTo;
+    private float moveSpeed = 0.05f;
 
     private boolean wDown = false;
     private boolean aDown = false;
@@ -23,15 +25,15 @@ public class Player implements Unit {
         {
             moveUp();
         }
-        if (aDown && !dDown)
+         else if (aDown && !dDown)
         {
             moveLeft();
         }
-        if (sDown && !wDown)
+        else if (sDown && !wDown)
         {
             moveDown();
         }
-        if (dDown && !aDown)
+        else if (dDown && !aDown)
         {
             moveRight();
         }
@@ -42,8 +44,31 @@ public class Player implements Unit {
         this.y = y;
     }
 
-    public void move() {
+    public void setCurrentTile(Tile currentTile) {
+        this.currentTile = currentTile;
+    }
 
+    public void move() {
+        if(nextMoveTo != null) {
+            if (x != nextMoveTo.getX()) {
+                int dir = -1;
+                if (x < nextMoveTo.getX())
+                    dir = 1;
+                x += dir * moveSpeed;
+
+            } else if (y != nextMoveTo.getY()) {
+                int dir = -1;
+                if (y < nextMoveTo.getY())
+                    dir = 1;
+                y += dir * moveSpeed;
+            }
+        }
+        if (Math.abs(x - nextMoveTo.getX()) <= 0.1f &&
+                Math.abs(y - nextMoveTo.getY()) <= 0.1f) {
+            x = nextMoveTo.getX();
+            y = nextMoveTo.getY();
+            nextMoveTo = null;
+        }
     }
 
     public void collision() {
@@ -51,31 +76,56 @@ public class Player implements Unit {
     }
 
     private void moveLeft() {
-        if ((x - 1) < 0) {
-            return;
+        if (nextMoveTo == null)
+        nextMoveTo = currentTile.getTileNeighbors()[0];
+
+        if (nextMoveTo.getType() == TileType.BLOCKED)
+        {
+            nextMoveTo = null;
+
         }
-        --x;
+        if(nextMoveTo != null) {
+            move();
+        }
     }
 
     private void moveRight() {
-        if ((x + 1) > Main.xSize - 1) {
-        return;
+        if (nextMoveTo == null)
+            nextMoveTo = currentTile.getTileNeighbors()[1];
+
+        if (nextMoveTo.getType() == TileType.BLOCKED)
+        {
+            nextMoveTo = null;
         }
-        ++x;
+        if(nextMoveTo != null) {
+            move();
+        }
     }
 
     private void moveUp() {
-        if ((y - 1) < 0) {
-        return;
+        if (nextMoveTo == null)
+            nextMoveTo = currentTile.getTileNeighbors()[2];
+
+        if (nextMoveTo.getType() == TileType.BLOCKED)
+        {
+            nextMoveTo = null;
         }
-        --y;
+        if(nextMoveTo != null) {
+            move();
+        }
     }
 
     private void moveDown() {
-        if ((y + 1) > Main.ySize - 1) {
-            return;
+        if (nextMoveTo == null)
+            nextMoveTo = currentTile.getTileNeighbors()[3];
+
+        if (nextMoveTo.getType() == TileType.BLOCKED)
+        {
+            nextMoveTo = null;
         }
-        ++y;
+        if(nextMoveTo != null) {
+            move();
+        }
     }
 
     public float getX() {
@@ -84,6 +134,10 @@ public class Player implements Unit {
 
     public float getY() {
         return this.y;
+    }
+
+    public int getSize() {
+        return (int) size;
     }
 
     public void setX(int x){

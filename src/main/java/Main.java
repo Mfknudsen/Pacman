@@ -46,12 +46,14 @@ public class Main extends PApplet {
                 if (t.getType() == TileType.PORTAL)
                     fill(145, 255, 187);
 
-                if (player1.getX() == t.getX() && player1.getY() == t.getY())
-                    fill(130,30,200);
-
                 DrawTile(t);
             }
         }
+
+        player1.setCurrentTile(map.getTileFromIndex((int) player1.getX(), (int) player1.getY()));
+        player1.Update();
+        DrawPlayer(player1.getX(), player1.getY(), player1.getSize());
+
 
         fill(0,255,0);
         Tile t = map.getTileFromCoordinates(mouseX, mouseY);
@@ -104,6 +106,14 @@ public class Main extends PApplet {
 
     void DrawGhost(float x, float y, int size) {
         fill(0,0,255);
+        rect((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
+                (y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
+                size,
+                size);
+    }
+
+    void DrawPlayer(float x, float y, int size) {
+        fill(130,30,200);
         rect((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
                 (y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
                 size,
