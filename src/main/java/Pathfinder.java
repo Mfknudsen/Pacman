@@ -2,13 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pathfinder {
-    private Tile startTile, endTile;
+    private Tile startTile, endTile, preTile;
 
     public List<PathNode> openNodes = new ArrayList<PathNode>();
     public List<PathNode> closedNodes = new ArrayList<PathNode>();
     public List<PathNode> result = new ArrayList<PathNode>();
 
-    public PathNode[] FindPath(){
+    public PathNode[] FindPath() {
+        if(startTile == null || endTile == null)
+            return new PathNode[0];
+
         openNodes = new ArrayList<PathNode>();
         closedNodes = new ArrayList<PathNode>();
         result = new ArrayList<PathNode>();
@@ -19,7 +22,7 @@ public class Pathfinder {
         openNodes.add(CreateNodesFromTile(startTile));
 
         //Search the open Nodes until non is left or if a PathNode is create with the end tile
-        while(!pathFound && (openNodes.size() > 0)) {
+        while (!pathFound && (openNodes.size() > 0)) {
             PathNode node = FindBestNode(openNodes);
 
             if (node != null) {
@@ -38,30 +41,35 @@ public class Pathfinder {
         }
 
         //Backtrace using parents in the PathNodes
-        while(!pathMade && (result.size() > 0)){
+        while (!pathMade && (result.size() > 0)) {
             PathNode node = result.get(result.size() - 1);
-            if(node.getTile() != startTile){
+            if (node.getTile() != startTile)
                 result.add(node.parent);
-            }
             else
                 pathMade = true;
         }
         return result.toArray(new PathNode[result.size()]);
     }
 
-    private PathNode CreateNodesFromTile(Tile input){
+    private PathNode CreateNodesFromTile(Tile input) {
         //Used to create the first PathNode in pathing.
         PathNode result = new PathNode(null, input);
         return result;
     }
 
-    private PathNode[] CreateNodesFromPathNode(PathNode input){
+    private PathNode[] CreateNodesFromPathNode(PathNode input) {
         //Used for create PathNode between the first Tile and including the last Tile.
         List<PathNode> result = new ArrayList<PathNode>();
         Tile[] neighbors = input.getTile().getTileNeighbors();
 
-        for (Tile t: neighbors) {
-            if(t != null && endTile != null) {
+        for (Tile t : neighbors) {
+            boolean check = true;
+            if(preTile != null && t != null){
+                if(t.getX() == preTile.getX() && t.getY() == preTile.getY())
+                    check = false;
+            }
+
+            if (t != null && endTile != null && check) {
                 if ((t.getType() == TileType.WALKABLE || t.getType() == TileType.GhostRoom || t.getType() == TileType.PORTAL) && NodeDontExitsInClosed(t)) {
                     PathNode node = new PathNode(input, t);
                     node.setValue(endTile.getX(), endTile.getY());
@@ -69,7 +77,6 @@ public class Pathfinder {
                 }
             }
         }
-
         return result.toArray(new PathNode[result.size()]);
     }
 
@@ -77,8 +84,8 @@ public class Pathfinder {
         PathNode result = input.get(0);
 
         for (PathNode node: input) {
-            if(node.getValue() < result.getValue())
-                result = node;
+                if (node.getValue() < result.getValue())
+                    result = node;
         }
 
         return result;
@@ -97,7 +104,11 @@ public class Pathfinder {
 
     //region Setters
     public void setStartTile(Tile startTile) {
-        this.startTile = startTile;
+        if(startTile != this.startTile) {
+            if(this.startTile != null)
+                preTile = this.startTile;
+            this.startTile = startTile;
+        }
     }
 
     public void setEndTile(Tile endTile) {

@@ -78,11 +78,11 @@ public class Player implements Unit {
         ++y;
     }
 
-    public int getX() {
+    public float getX() {
         return this.x;
     }
 
-    public int getY() {
+    public float getY() {
         return this.y;
     }
 
