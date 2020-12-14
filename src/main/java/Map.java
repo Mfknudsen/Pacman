@@ -80,7 +80,7 @@ public class Map{
                     //region L shapes
                 else if (
                         (((tiles[x][y].getX() >= 2 && tiles[x][y].getX() <= 5) || (tiles[x][y].getX() >= 22 && tiles[x][y].getX() <= 25)) && (tiles[x][y].getY() >= 21 && tiles[x][y].getY() <= 22)
-                                || ((tiles[x][y].getX() >= 4 && tiles[x][y].getX() <= 5) || (tiles[x][y].getX() >= 22 && tiles[x][y].getX() <= 23)) && (tiles[x][y].getY() >= 23 && tiles[x][y].getY() <= 24))
+                                || ((tiles[x][y].getX() >= 4 && tiles[x][y].getX() <= 5) || (tiles[x][y].getX() >= 22 && tiles[x][y].getX() <= 23)) && (tiles[x][y].getY() >= 23 && tiles[x][y].getY() <= 25))
                 )
                     tiles[x][y].setType(TileType.BLOCKED);
 
@@ -97,19 +97,19 @@ public class Map{
                     //region Bottom T-shapes
                 else if (
                         ((tiles[x][y].getX() >= 2 && tiles[x][y].getX() <= 11) && (tiles[x][y].getY() >= 27 && tiles[x][y].getY() <= 28))
-                                || ((tiles[x][y].getX() >= 7 && tiles[x][y].getX() <= 8) && (tiles[x][y].getY() >= 25 && tiles[x][y].getY() <= 28)) // Left T-shape
+                                || ((tiles[x][y].getX() >= 7 && tiles[x][y].getX() <= 8) && (tiles[x][y].getY() >= 24 && tiles[x][y].getY() <= 28)) // Left T-shape
 
                                 || ((tiles[x][y].getX() >= 10 && tiles[x][y].getX() <= 17) && (tiles[x][y].getY() >= 24 && tiles[x][y].getY() <= 25))
                                 || ((tiles[x][y].getX() >= 13 && tiles[x][y].getX() <= 14) && (tiles[x][y].getY() >= 26 && tiles[x][y].getY() <= 28))// Middle T-shape
 
                                 || (((tiles[x][y].getX() >= 16 && tiles[x][y].getX() <= 25)) && (tiles[x][y].getY() >= 27 && tiles[x][y].getY() <= 28))
-                                || ((tiles[x][y].getX() >= 19 && tiles[x][y].getX() <= 20) && (tiles[x][y].getY() >= 25 && tiles[x][y].getY() <= 28))// Right T-shape
+                                || ((tiles[x][y].getX() >= 19 && tiles[x][y].getX() <= 20) && (tiles[x][y].getY() >= 24 && tiles[x][y].getY() <= 28))// Right T-shape
                 )
                     tiles[x][y].setType(TileType.BLOCKED);
 
                     //endregion
 
-                    //region Bottom T-shapes
+                    //region Bottom wall bumps
                 else if (
                         ((tiles[x][y].getX() >= 1 && tiles[x][y].getX() <= 2) && (tiles[x][y].getY() >= 24 && tiles[x][y].getY() <= 25)) // Left bump
                                 || ((tiles[x][y].getX() >= xSize - 3 && tiles[x][y].getX() <= xSize - 2) && (tiles[x][y].getY() >= 24 && tiles[x][y].getY() <= 25)) // Right bump
