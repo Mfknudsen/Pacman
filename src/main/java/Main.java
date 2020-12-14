@@ -7,6 +7,8 @@ public class Main extends PApplet {
     public static int gameMapColorVCX = 87;
     private Ghost[] ghost;
     private Player player1;
+    private boolean ghostReady = false;
+    private int ghostTimer = 0;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -17,20 +19,20 @@ public class Main extends PApplet {
         map.SetupMap();
 
         ghost = new Ghost[4];
-        Blinky blinky = new Blinky(11,13);
+        Blinky blinky = new Blinky(11,13, 0);
         blinky.setColor(255, 0, 0);
         blinky.setScatter(map.getTileFromIndex(26, 1));
         ghost[0] = blinky;
-        Inky inky = new Inky(11,15);
+        Inky inky = new Inky(11,15, 0.25f);
         inky.setColor(0, 255, 255);
         inky.setScatter(map.getTileFromIndex(26,29));
         inky.setBlinky(ghost[0]);
         ghost[1] = inky;
-        Pinky pinky = new Pinky(16,13);
+        Pinky pinky = new Pinky(16,13, 0.5f);
         pinky.setColor(255, 255, 0);
         pinky.setScatter(map.getTileFromIndex(1, 1));
         ghost[2] = pinky;
-        Clyde clyde = new Clyde(16,15);
+        Clyde clyde = new Clyde(16,15, 0.75f);
         clyde.setColor(255, 100, 100);
         clyde.setScatter(map.getTileFromIndex(1, 29));
         ghost[3] = clyde;
@@ -44,15 +46,16 @@ public class Main extends PApplet {
         }
     }
 
-    public void draw(){
+    public void draw() {
         Tile[][] draw = map.getTiles();
         player1.Update();
 
-        for (Tile[] tileArr: draw) {
+        //Redraw Map
+        for (Tile[] tileArr : draw) {
             for (Tile t : tileArr) {
                 fill(255);
 
-                if(t.getType() == TileType.BLOCKED)
+                if (t.getType() == TileType.BLOCKED)
                     fill(gameMapColorVCX);
 
                 // yellow color for ghost room
@@ -67,35 +70,57 @@ public class Main extends PApplet {
             }
         }
 
+        //Update and Draw Player
         player1.setCurrentTile(map.getTileFromIndex((int) player1.getX(), (int) player1.getY()));
         player1.Update();
         DrawPlayer(player1.getX(), player1.getY(), player1.getSize());
 
+        //Update and Draw Ghosts
+        if (ghostReady){
+            ghostTimer++;
 
-        fill(0,255,0);
-        Tile t = map.getTileFromCoordinates(mouseX, mouseY);
-        DrawTile(t);
+            if(ghostTimer % 180 == 0){
+                for (Ghost g: ghost) {
+                    if(g != null){
 
-        for (Ghost g: ghost) {
+                    }
+                }
+            }
+        }
+        else{
+            ghostReady = true;
+            for (Ghost g: ghost){
+                if(g != null){
+                    if(g.getState() != GhostState.CHASE){
+                        ghostReady = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (Ghost g : ghost) {
             if (g != null) {
-                g.setCurrent(map.getTileFromIndex((int)g.getX(), (int)g.getY()));
+                g.setCurrent(map.getTileFromIndex((int) g.getX(), (int) g.getY()));
                 g.Update();
-                DrawGhost(g.getX(), g.getY(), g.getSize(), g.getColor());
+                DrawGhost(g.getX(), g.getY(), g.getSize(), g.getColor(), g.getDirection(), g.state);
             }
         }
 
         //Debug Coordinates
-        for (Tile[] set: draw){
-            for (Tile tile: set){
-                fill(0);
-                text("X: " + (tile.getX()),
-                        (tile.getX()  * tileSize) + tileSize - (tileSize/2 - (tileSize * 0.1f)),
-                        (tile.getY()  * tileSize) + tileSize - (tileSize/2) + (tileSize * 0.5f));
-                text("Y: " + (tile.getY()),
-                        (tile.getX()  * tileSize) + tileSize - (tileSize/2 - (tileSize * 0.1f)),
-                        (tile.getY()  * tileSize) + tileSize - (tileSize/2) + (tileSize * 0.75f));
+/*
+            for (Tile[] set : draw) {
+                for (Tile tile : set) {
+                    fill(0);
+                    text("X: " + (tile.getX()),
+                            (tile.getX() * tileSize) + tileSize - (tileSize / 2 - (tileSize * 0.1f)),
+                            (tile.getY() * tileSize) + tileSize - (tileSize / 2) + (tileSize * 0.5f));
+                    text("Y: " + (tile.getY()),
+                            (tile.getX() * tileSize) + tileSize - (tileSize / 2 - (tileSize * 0.1f)),
+                            (tile.getY() * tileSize) + tileSize - (tileSize / 2) + (tileSize * 0.75f));
+                }
             }
-        }
+*/
     }
 
     public void keyPressed(){
@@ -115,12 +140,45 @@ public class Main extends PApplet {
         }
     }
 
-    void DrawGhost(float x, float y, int size, float[] color) {
-        fill(color[0], color[1], color[2]);
-        rect((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
-                (y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
-                size,
-                size);
+    void DrawGhost(float x, float y, int size, float[] color, Direction direction, GhostState state) {
+        if(state != GhostState.RETURN) {
+            fill(color[0], color[1], color[2]);
+            rect((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size) / 2,
+                    (y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size) / 2,
+                    size,
+                    size);
+        }
+        float centerX = ((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2) + size/2;
+        float centerY = ((y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2) + size/2;
+        fill(255);
+        rect(centerX - 10, centerY - 10, 8, 14);
+        rect(centerX + 2, centerY - 10, 8, 14);
+
+        float   xLeft = centerX - 10 + 4,
+                xRight = centerX + 2 + 4,
+                yLeft = centerY - 10  + 7,
+                yRight = centerY - 10 + 7;
+
+        if(direction == Direction.DOWN){
+            yLeft += 5;
+            yRight += 5;
+        }
+        else if(direction == Direction.UP){
+            yLeft -= 4;
+            yRight -= 4;
+        }
+        else if(direction == Direction.LEFT){
+            xLeft -= 2;
+            xRight -= 2;
+        }
+        else{
+            xLeft += 2;
+            xRight += 2;
+        }
+
+        fill(0);
+        rect(xLeft - 2, yLeft - 2, 4, 4);
+        rect(xRight - 2, yRight - 2, 4, 4);
     }
 
     void DrawPlayer(float x, float y, int size) {

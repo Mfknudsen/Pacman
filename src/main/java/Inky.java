@@ -4,8 +4,8 @@ import java.util.List;
 public class Inky extends Ghost{
     private Ghost blinky;
 
-    public Inky(int x, int y) {
-        super(x, y);
+    public Inky(int x, int y, float delayTime) {
+        super(x, y, delayTime);
     }
 
     public void setBlinky(Ghost blinky) {

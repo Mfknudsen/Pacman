@@ -1,6 +1,6 @@
 public class Pinky extends Ghost{
-    public Pinky(int x, int y) {
-        super(x, y);
+    public Pinky(int x, int y, float delayTime) {
+        super(x, y, delayTime);
     }
 
     @Override

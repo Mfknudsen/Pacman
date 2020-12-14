@@ -172,18 +172,26 @@ public class Player extends Map implements Unit {
         {
             wDown = true;
             sDown = false;
+            aDown = false;
+            dDown = false;
         } else if (ch == 'A' || ch == 'a')
         {
+            wDown = false;
+            sDown = false;
             aDown = true;
             dDown = false;
         } else if (ch == 'S' || ch == 's')
         {
-            sDown = true;
             wDown = false;
+            sDown = true;
+            aDown = false;
+            dDown = false;
         } else if (ch == 'D' || ch == 'd')
         {
-            dDown = true;
+            wDown = false;
+            sDown = false;
             aDown = false;
+            dDown = true;
         }
     }
 

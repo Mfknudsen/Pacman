@@ -1,5 +1,7 @@
 public class Clyde extends Ghost{
-    public Clyde(int x, int y) { super(x, y); }
+    public Clyde(int x, int y, float delayTime) {
+        super(x, y, delayTime);
+    }
 
     @Override
     protected void determineTarget(Tile preDetermine) {
