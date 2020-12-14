@@ -1,11 +1,14 @@
+import java.awt.*;
+
 public class Ghost implements Unit, Scoring{
 
     // set spawn point (probably x: 11 to 15  and y: 13 to 15)
     // move animation from one tile to the next
     // collision detection, here?
 
-    protected float x, y, size = 20;
+    protected float x, y, size = 30;
     protected float moveSpeed = 0.05f;
+    protected float r,g,b;
     protected Tile nextMoveTo;
     protected Pathfinder pathfinder;
     protected GhostState state;
@@ -111,6 +114,12 @@ public class Ghost implements Unit, Scoring{
     public void setState(GhostState state){
         this.state = state;
     }
+
+    public void setColor(float r, float b, float g){
+        this.r = r;
+        this.b = b;
+        this.g = g;
+    }
     //endregion
 
     //region Getters
@@ -128,6 +137,10 @@ public class Ghost implements Unit, Scoring{
 
     public int getSize() {
         return (int) size;
+    }
+
+    public float[] getColor(){
+        return new float[]{r,g,b};
     }
     //endregion
 }
