@@ -6,7 +6,7 @@ public class Player extends Map implements Unit {
     // move animation from one tile to the next
     // collision detection, here?
 
-    private float x, y, size = 20;
+    private float x, y, size = 30;
     private Tile currentTile, nextMoveTo;
     private float moveSpeed = 0.05f;
     private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right

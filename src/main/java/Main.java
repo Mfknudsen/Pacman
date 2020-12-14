@@ -2,11 +2,11 @@ import processing.core.PApplet;
 
 public class Main extends PApplet {
     public static Map map;
-    public static int size = 40, tileSize = 40;
+    public static int tileSize = 40;
     public static int xSize = 28, ySize = 31;
     public static int gameMapColorVCX = 87;
-    Ghost[] ghost;
-    Player player1;
+    private Ghost[] ghost;
+    private Player player1;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -18,16 +18,20 @@ public class Main extends PApplet {
 
         ghost = new Ghost[4];
         Blinky blinky = new Blinky(11,13);
+        blinky.setColor(255, 0, 0);
         blinky.setScatter(map.getTileFromIndex(26, 1));
-        //ghost[0] = blinky;
+        ghost[0] = blinky;
         Inky inky = new Inky(11,15);
+        inky.setColor(0, 255, 255);
         inky.setScatter(map.getTileFromIndex(26,29));
         inky.setBlinky(ghost[0]);
-        //ghost[1] = inky;
+        ghost[1] = inky;
         Pinky pinky = new Pinky(16,13);
+        pinky.setColor(255, 255, 0);
         pinky.setScatter(map.getTileFromIndex(1, 1));
-        //ghost[2] = pinky;
+        ghost[2] = pinky;
         Clyde clyde = new Clyde(16,15);
+        clyde.setColor(255, 100, 100);
         clyde.setScatter(map.getTileFromIndex(1, 29));
         ghost[3] = clyde;
 
@@ -76,7 +80,7 @@ public class Main extends PApplet {
             if (g != null) {
                 g.setCurrent(map.getTileFromIndex((int)g.getX(), (int)g.getY()));
                 g.Update();
-                DrawGhost(g.getX(), g.getY(), g.getSize());
+                DrawGhost(g.getX(), g.getY(), g.getSize(), g.getColor());
             }
         }
 
@@ -98,11 +102,6 @@ public class Main extends PApplet {
         player1.onKeyPressed(key);
     }
 
-   /* public void keyReleased()
-    {
-        player1.onKeyReleased(key);
-    }*/
-
     public static void main(String[] args){
         PApplet.main("Main");
     }
@@ -116,8 +115,8 @@ public class Main extends PApplet {
         }
     }
 
-    void DrawGhost(float x, float y, int size) {
-        fill(0,0,255);
+    void DrawGhost(float x, float y, int size, float[] color) {
+        fill(color[0], color[1], color[2]);
         rect((x * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
                 (y * tileSize) + tileSize - (tileSize / 2) + (tileSize - size)/ 2,
                 size,
