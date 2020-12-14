@@ -115,4 +115,10 @@ public class Pathfinder {
         this.endTile = endTile;
     }
     //endregion
+
+    //region Getters
+    public Tile getPreTile() {
+        return preTile;
+    }
+    //endregion
 }

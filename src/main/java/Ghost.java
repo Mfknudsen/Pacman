@@ -1,44 +1,58 @@
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ghost implements Unit, Scoring{
-
-    // set spawn point (probably x: 11 to 15  and y: 13 to 15)
-    // move animation from one tile to the next
-    // collision detection, here?
-
     protected float x, y, size = 30;
     protected float moveSpeed = 0.05f;
     protected float r,g,b;
     protected Tile nextMoveTo;
     protected Pathfinder pathfinder;
     protected GhostState state;
-    protected Tile current, scatter;
+    protected Tile current, scatter, spawn;
     protected Player target;
     protected PathNode[] currentPath;
+    protected Direction direction;
 
+    //Wait timer
+    float timer, delayTime;
 
-    public Ghost(int x, int y) {
+    public Ghost(int x, int y, float delayTime) {
         pathfinder = new Pathfinder();
-        state = GhostState.CHASE;
-
+        state = GhostState.WAIT;
+        direction = Direction.DOWN;
+        spawn = Main.map.getTileFromIndex(x,y);
         this.x = x;
         this.y = y;
+        this.delayTime = delayTime * 120;
     }
 
     public void Update(){
         switch (state) {
             case WAIT:
+                if(timer >= delayTime)
+                    state = GhostState.CHASE;
+                else
+                    timer += 0.1f;
                 break;
 
             case CHASE:
                 determineTarget(target.getCurrentTile());
                 break;
 
-            case FLEE:
+            case SCATTER:
                 determineTarget(scatter);
+                if(current.getX() == scatter.getX() && current.getY() == scatter.getY())
+                    state = GhostState.CHASE;
+                break;
+
+            case FLEE:
+                determineTarget(randomNeighborTile(current));
                 break;
 
             case RETURN:
+                determineTarget(spawn);
+                if(current.getX() == spawn.getX() && current.getY() == spawn.getY())
+                    state = GhostState.CHASE;
                 break;
         }
 
@@ -54,8 +68,7 @@ public class Ghost implements Unit, Scoring{
                 }
             }
             else {
-                if(current != null && target != null) {
-                    pathfinder.setStartTile(current);
+                if(current != null) {
                     currentPath = pathfinder.FindPath();
 
                     if (currentPath.length > 0)
@@ -70,14 +83,20 @@ public class Ghost implements Unit, Scoring{
         if(nextMoveTo != null) {
             if (x != nextMoveTo.getX()) {
                 int dir = -1;
-                if (x < nextMoveTo.getX())
+                direction = Direction.LEFT;
+                if (x < nextMoveTo.getX()) {
                     dir = 1;
+                    direction = Direction.RIGHT;
+                }
                 x += dir * moveSpeed;
 
             } else if (y != nextMoveTo.getY()) {
                 int dir = -1;
-                if (y < nextMoveTo.getY())
+                direction = Direction.UP;
+                if (y < nextMoveTo.getY()) {
                     dir = 1;
+                    direction = Direction.DOWN;
+                }
                 y += dir * moveSpeed;
             }
         }
@@ -91,9 +110,35 @@ public class Ghost implements Unit, Scoring{
 
     }
 
-    //Used to override in Pinky
     protected void determineTarget(Tile preDetermine){
         pathfinder.setEndTile(preDetermine);
+    }
+
+    private Tile randomNeighborTile(Tile input){
+        Tile result;
+        List<Tile> arr = new ArrayList<Tile>();
+
+        for (Tile t: input.getTileNeighbors()) {
+            if(t != null) {
+                if (t.getType() != TileType.BLOCKED){
+                    if(pathfinder.getPreTile() != null) {
+                        if(!(t.getX() == pathfinder.getPreTile().getX() && t.getY() == pathfinder.getPreTile().getY()))
+                            arr.add(t);
+                    }
+                    else
+                        arr.add(t);
+                }
+            }
+        }
+
+        int index = (int) (Math.random() * 3);
+        if(index >= arr.size())
+            index = arr.size() - 1;
+        if(index < 0)
+            index = 0;
+        result = arr.get(index);
+
+        return result;
     }
 
     //region Setters
@@ -105,6 +150,8 @@ public class Ghost implements Unit, Scoring{
 
     public void setCurrent(Tile current) {
         this.current = current;
+
+        pathfinder.setStartTile(this.current);
     }
 
     public void setScatter(Tile scatter) {
@@ -139,8 +186,16 @@ public class Ghost implements Unit, Scoring{
         return (int) size;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
     public float[] getColor(){
         return new float[]{r,g,b};
+    }
+
+    public GhostState getState() {
+        return state;
     }
     //endregion
 }
