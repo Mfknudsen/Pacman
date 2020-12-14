@@ -78,7 +78,6 @@ public class Player extends Map implements Unit {
     private void moveLeft() {
         direction = Direction.LEFT;
 
-        if (nextMoveTo == null)
         nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 0);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()){
@@ -94,8 +93,7 @@ public class Player extends Map implements Unit {
     private void moveRight() {
         direction = Direction.RIGHT;
 
-        if (nextMoveTo == null)
-            nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 1);
+        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 1);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
             dDown = false;
@@ -110,8 +108,7 @@ public class Player extends Map implements Unit {
     private void moveUp() {
         direction = Direction.UP;
 
-        if (nextMoveTo == null)
-            nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 2);
+        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 2);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
             wDown = false;
@@ -126,8 +123,7 @@ public class Player extends Map implements Unit {
     private void moveDown() {
         direction = Direction.DOWN;
 
-        if (nextMoveTo == null)
-            nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 3);
+        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 3);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
             sDown = false;
