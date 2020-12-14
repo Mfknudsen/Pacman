@@ -17,10 +17,19 @@ public class Main extends PApplet {
         map.SetupMap();
 
         ghost = new Ghost[4];
-        ghost[0] = new Blinky(11,13);
-        ghost[1] = new Inky(11,15);
-        ghost[2] = new Pinky(16,13);
-        ghost[3] = new Clyde(16,15);
+        Blinky blinky = new Blinky(11,13);
+        blinky.setScatter(map.getTileFromIndex(26, 1));
+        //ghost[0] = blinky;
+        Inky inky = new Inky(11,15);
+        inky.setScatter(map.getTileFromIndex(26,29));
+        inky.setBlinky(ghost[0]);
+        //ghost[1] = inky;
+        Pinky pinky = new Pinky(16,13);
+        pinky.setScatter(map.getTileFromIndex(1, 1));
+        //ghost[2] = pinky;
+        Clyde clyde = new Clyde(16,15);
+        clyde.setScatter(map.getTileFromIndex(1, 29));
+        ghost[3] = clyde;
 
         player1 = new Player();
         player1.setSpawnPoint(14, 23);

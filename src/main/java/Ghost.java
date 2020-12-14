@@ -4,14 +4,14 @@ public class Ghost implements Unit, Scoring{
     // move animation from one tile to the next
     // collision detection, here?
 
-    private float x, y, size = 20;
-    private float moveSpeed = 0.05f;
-    private Tile nextMoveTo;
-    private Pathfinder pathfinder;
-    private GhostState state;
-    private Tile current, scatter;
-    private Player target;
-    private PathNode[] currentPath;
+    protected float x, y, size = 20;
+    protected float moveSpeed = 0.05f;
+    protected Tile nextMoveTo;
+    protected Pathfinder pathfinder;
+    protected GhostState state;
+    protected Tile current, scatter;
+    protected Player target;
+    protected PathNode[] currentPath;
 
 
     public Ghost(int x, int y) {
@@ -28,10 +28,11 @@ public class Ghost implements Unit, Scoring{
                 break;
 
             case CHASE:
-                pathfinder.setEndTile(target.getCurrentTile());
+                determineTarget(target.getCurrentTile());
                 break;
 
             case FLEE:
+                determineTarget(scatter);
                 break;
 
             case RETURN:
@@ -87,6 +88,11 @@ public class Ghost implements Unit, Scoring{
 
     }
 
+    //Used to override in Pinky
+    protected void determineTarget(Tile preDetermine){
+        pathfinder.setEndTile(preDetermine);
+    }
+
     //region Setters
     public void setTarget(Player target) {
         if (target != null) {
@@ -96,6 +102,10 @@ public class Ghost implements Unit, Scoring{
 
     public void setCurrent(Tile current) {
         this.current = current;
+    }
+
+    public void setScatter(Tile scatter) {
+        this.scatter = scatter;
     }
 
     public void setState(GhostState state){

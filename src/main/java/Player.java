@@ -76,6 +76,8 @@ public class Player extends Map implements Unit {
     }
 
     private void moveLeft() {
+        direction = Direction.LEFT;
+
         if (nextMoveTo == null)
         nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 0);
 
@@ -90,6 +92,8 @@ public class Player extends Map implements Unit {
     }
 
     private void moveRight() {
+        direction = Direction.RIGHT;
+
         if (nextMoveTo == null)
             nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 1);
 
@@ -104,6 +108,8 @@ public class Player extends Map implements Unit {
     }
 
     private void moveUp() {
+        direction = Direction.UP;
+
         if (nextMoveTo == null)
             nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 2);
 
@@ -118,6 +124,8 @@ public class Player extends Map implements Unit {
     }
 
     private void moveDown() {
+        direction = Direction.DOWN;
+
         if (nextMoveTo == null)
             nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 3);
 
@@ -159,9 +167,11 @@ public class Player extends Map implements Unit {
         this.y = y;
     }
 
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
 
-    void onKeyPressed(char ch)
-    {
+    void onKeyPressed(char ch) {
         if (ch == 'W' || ch == 'w')
         {
             wDown = true;
@@ -181,8 +191,7 @@ public class Player extends Map implements Unit {
         }
     }
 
-    void onKeyReleased(char ch)
-    {
+    void onKeyReleased(char ch) {
         if (ch == 'W' || ch == 'w')
         {
             wDown = false;

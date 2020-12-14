@@ -1,5 +1,5 @@
 public class Inky extends Ghost{
-    private Blinky blinky;
+    private Ghost blinky;
 
     public Inky(int x, int y) {
         super(x, y);
@@ -10,8 +10,7 @@ public class Inky extends Ghost{
         super.Update();
     }
 
-    @Override
-    public void setTarget(Player target) {
-        super.setTarget(target);
+    public void setBlinky(Ghost blinky) {
+        this.blinky = blinky;
     }
 }

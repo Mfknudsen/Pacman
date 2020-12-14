@@ -1,6 +1,6 @@
 public enum GhostState {
     CHASE,
-    FLEE,
     RETURN,
+    FLEE,
     WAIT
 }
