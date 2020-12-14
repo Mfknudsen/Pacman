@@ -9,7 +9,7 @@ public class Player extends Map implements Unit {
     private float x, y, size = 20;
     private Tile currentTile, nextMoveTo;
     private float moveSpeed = 0.05f;
-    private int direction; //0 = Up, 1 = Left, 2 = Down, 3 = Right
+    private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right
 
     private boolean wDown = false;
     private boolean aDown = false;
@@ -77,13 +77,13 @@ public class Player extends Map implements Unit {
 
     private void moveLeft() {
         if (nextMoveTo == null)
-        nextMoveTo = currentTile.getTileNeighbors()[0];
+        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 0);
 
-        if (nextMoveTo.getType() == TileType.BLOCKED)
-        {
+        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()){
+            aDown = false;
             nextMoveTo = null;
-
         }
+
         if(nextMoveTo != null) {
             move();
         }
@@ -91,12 +91,13 @@ public class Player extends Map implements Unit {
 
     private void moveRight() {
         if (nextMoveTo == null)
-            nextMoveTo = currentTile.getTileNeighbors()[1];
+            nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 1);
 
-        if (nextMoveTo.getType() == TileType.BLOCKED)
-        {
+        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
+            dDown = false;
             nextMoveTo = null;
         }
+
         if(nextMoveTo != null) {
             move();
         }
@@ -104,12 +105,13 @@ public class Player extends Map implements Unit {
 
     private void moveUp() {
         if (nextMoveTo == null)
-            nextMoveTo = currentTile.getTileNeighbors()[2];
+            nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 2);
 
-        if (nextMoveTo.getType() == TileType.BLOCKED)
-        {
+        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
+            wDown = false;
             nextMoveTo = null;
         }
+
         if(nextMoveTo != null) {
             move();
         }
@@ -117,12 +119,13 @@ public class Player extends Map implements Unit {
 
     private void moveDown() {
         if (nextMoveTo == null)
-            nextMoveTo = currentTile.getTileNeighbors()[3];
+            nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 3);
 
-        if (nextMoveTo.getType() == TileType.BLOCKED)
-        {
+        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
+            sDown = false;
             nextMoveTo = null;
         }
+
         if(nextMoveTo != null) {
             move();
         }
@@ -144,7 +147,7 @@ public class Player extends Map implements Unit {
         return currentTile;
     }
 
-    public int getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
@@ -162,15 +165,19 @@ public class Player extends Map implements Unit {
         if (ch == 'W' || ch == 'w')
         {
             wDown = true;
+            sDown = false;
         } else if (ch == 'A' || ch == 'a')
         {
             aDown = true;
+            dDown = false;
         } else if (ch == 'S' || ch == 's')
         {
             sDown = true;
+            wDown = false;
         } else if (ch == 'D' || ch == 'd')
         {
             dDown = true;
+            aDown = false;
         }
     }
 

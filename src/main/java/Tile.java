@@ -2,6 +2,7 @@ public class Tile {
     private int x, y;
     private Tile[] neighbors = new Tile[4];
     private TileType type;
+    private Tile root;
 
     public Tile(int x, int y) {
         this.x = x;
@@ -20,6 +21,21 @@ public class Tile {
     public Tile[] getTileNeighbors(){
         return neighbors;
     }
+
+    public Tile getBlockedOrPortal(Tile currentTile, int direction){
+
+        root = currentTile;
+
+        if (currentTile.getTileNeighbors()[direction].getType() != TileType.BLOCKED)
+            if (currentTile.getTileNeighbors()[direction].getType() != TileType.PORTAL)
+                if (currentTile.getTileNeighbors()[direction].getType() != TileType.GhostRoom)
+                    getBlockedOrPortal(currentTile.getTileNeighbors()[direction], direction);
+        return root;
+    }
+
+//    public Tile getOpenOrPortal(Tile currentTile, int direction){
+//
+//    }
 
     public TileType getType() {
         return type;

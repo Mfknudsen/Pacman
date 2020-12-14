@@ -89,10 +89,10 @@ public class Main extends PApplet {
         player1.onKeyPressed(key);
     }
 
-    public void keyReleased()
+   /* public void keyReleased()
     {
         player1.onKeyReleased(key);
-    }
+    }*/
 
     public static void main(String[] args){
         PApplet.main("Main");
