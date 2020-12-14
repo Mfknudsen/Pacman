@@ -9,8 +9,10 @@ public class Ghost implements Unit, Scoring{
     private Tile nextMoveTo;
     private Pathfinder pathfinder;
     private GhostState state;
-    private Tile current, target;
+    private Tile current, scatter;
+    private Player target;
     private PathNode[] currentPath;
+
 
     public Ghost(int x, int y) {
         pathfinder = new Pathfinder();
@@ -26,6 +28,7 @@ public class Ghost implements Unit, Scoring{
                 break;
 
             case CHASE:
+                pathfinder.setEndTile(target.getCurrentTile());
                 break;
 
             case FLEE:
@@ -49,7 +52,6 @@ public class Ghost implements Unit, Scoring{
             else {
                 if(current != null && target != null) {
                     pathfinder.setStartTile(current);
-                    pathfinder.setEndTile(target);
                     currentPath = pathfinder.FindPath();
 
                     if (currentPath.length > 0)
@@ -85,10 +87,10 @@ public class Ghost implements Unit, Scoring{
 
     }
 
-    public void setTarget(Tile target) {
+    //region Setters
+    public void setTarget(Player target) {
         if (target != null) {
-            if (target.getType() != TileType.BLOCKED)
-                this.target = target;
+            this.target = target;
         }
     }
 
@@ -96,6 +98,12 @@ public class Ghost implements Unit, Scoring{
         this.current = current;
     }
 
+    public void setState(GhostState state){
+        this.state = state;
+    }
+    //endregion
+
+    //region Getters
     public float getX() {
         return this.x;
     }
@@ -111,4 +119,5 @@ public class Ghost implements Unit, Scoring{
     public int getSize() {
         return (int) size;
     }
+    //endregion
 }

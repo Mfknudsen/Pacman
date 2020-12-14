@@ -7,9 +7,9 @@ public class Player extends Map implements Unit {
     // collision detection, here?
 
     private float x, y, size = 20;
-    private Tile currentTile;
-    private Tile nextMoveTo;
+    private Tile currentTile, nextMoveTo;
     private float moveSpeed = 0.05f;
+    private int direction; //0 = Up, 1 = Left, 2 = Down, 3 = Right
 
     private boolean wDown = false;
     private boolean aDown = false;
@@ -138,6 +138,14 @@ public class Player extends Map implements Unit {
 
     public int getSize() {
         return (int) size;
+    }
+
+    public Tile getCurrentTile() {
+        return currentTile;
+    }
+
+    public int getDirection() {
+        return direction;
     }
 
     public void setX(int x){

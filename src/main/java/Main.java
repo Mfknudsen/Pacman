@@ -16,15 +16,19 @@ public class Main extends PApplet {
         map = new Map();
         map.SetupMap();
 
-
         ghost = new Ghost[4];
-        ghost[0] = new Ghost(11,13);
-        ghost[1] = new Ghost(11,15);
-        ghost[2] = new Ghost(16,13);
-        ghost[3] = new Ghost(16,15);
+        ghost[0] = new Blinky(11,13);
+        ghost[1] = new Inky(11,15);
+        ghost[2] = new Pinky(16,13);
+        ghost[3] = new Clyde(16,15);
 
         player1 = new Player();
         player1.setSpawnPoint(14, 23);
+
+        for (Ghost g: ghost) {
+            if(g != null)
+                g.setTarget(player1);
+        }
     }
 
     public void draw(){
@@ -62,7 +66,6 @@ public class Main extends PApplet {
         for (Ghost g: ghost) {
             if (g != null) {
                 g.setCurrent(map.getTileFromIndex((int)g.getX(), (int)g.getY()));
-                g.setTarget(map.getTileFromCoordinates(mouseX, mouseY));
                 g.Update();
                 DrawGhost(g.getX(), g.getY(), g.getSize());
             }
