@@ -1,11 +1,6 @@
 import java.awt.event.KeyEvent;
 
 public class Player extends Map implements Unit {
-
-    // set spawn point (probably x: 13 or 14 and y:23)
-    // move animation from one tile to the next
-    // collision detection, here?
-
     private float x, y, size = 30;
     private Tile currentTile, nextMoveTo;
     private float moveSpeed = 0.05f;
@@ -70,11 +65,7 @@ public class Player extends Map implements Unit {
             nextMoveTo = null;
         }
     }
-
-    public void collision() {
-
-    }
-
+    
     private void moveLeft() {
         direction = Direction.LEFT;
 

@@ -1,13 +1,19 @@
-public class Map{
-    private Tile[][] tiles;
+import java.util.ArrayList;
+import java.util.List;
 
-    public void SetupMap(){
+public class Map {
+    private Tile[][] tiles;
+    private List<PowerUp> powerUps = new ArrayList<PowerUp>();
+    private List<Pebble> pebbles = new ArrayList<Pebble>();
+    private List<Fruit> fruits = new ArrayList<Fruit>();
+
+    public void SetupMap() {
         int xSize = Main.xSize, ySize = Main.ySize;
 
         tiles = new Tile[xSize][ySize];
 
-        for(int x = 0; x < xSize; x++){
-            for(int y = 0; y < ySize; y++) {
+        for (int x = 0; x < xSize; x++) {
+            for (int y = 0; y < ySize; y++) {
                 tiles[x][y] = new Tile(x, y);
 
                 //region outer walls
@@ -143,28 +149,74 @@ public class Map{
             }
         }
 
-        for(int x = 0; x < xSize; x++) {
+        for (int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
                 Tile tile = tiles[x][y];
                 Tile[] neighbors = new Tile[4];
 
-                if(x - 1 >= 0)
-                   neighbors[0] = tiles[x - 1][y];
-                if(x + 1 < xSize)
+                if (x - 1 >= 0)
+                    neighbors[0] = tiles[x - 1][y];
+                if (x + 1 < xSize)
                     neighbors[1] = tiles[x + 1][y];
-                if(y - 1 >= 0)
+                if (y - 1 >= 0)
                     neighbors[2] = tiles[x][y - 1];
-                if(y + 1 < ySize)
+                if (y + 1 < ySize)
                     neighbors[3] = tiles[x][y + 1];
 
                 tile.setNeighbors(neighbors);
             }
         }
+
+        Pathfinder pebbleSetter = new Pathfinder();
+        pebbleSetter.setStartTile(getTileFromIndex(1, 0));
+        pebbleSetter.setEndTile(getTileFromIndex(27, 30));
+        pebbleSetter.FindPath();
+        for (PathNode node : pebbleSetter.getClosedNodes()) {
+            if (node.getTile().getType() == TileType.WALKABLE) {
+                boolean isEmpty = true;
+
+                for (PowerUp power : powerUps) {
+                    if (power.getX() == node.getTile().getX() && power.getY() == node.getTile().getY()) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                for (Fruit fruit : fruits) {
+                    if (fruit.getX() == node.getTile().getX() && fruit.getY() == node.getTile().getY()) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+
+                if (isEmpty) {
+                    Pebble pebble = new Pebble(node.getTile().getX(), node.getTile().getY());
+                    pebbles.add(pebble);
+                }
+            }
+        }
+    }
+
+    public void createFruit(int x, int y){
+        Fruit fruit = new Fruit(x, y);
+        fruits.add(fruit);
+    }
+
+    public void createPowerUp(int x, int y){
+        PowerUp powerUp = new PowerUp(x, y);
+        powerUps.add(powerUp);
     }
 
     //region Getters
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public List<PowerUp> getPowerUps() {
+        return powerUps;
+    }
+
+    public List<Pebble> getPebbles() {
+        return pebbles;
     }
 
     public Tile getTileFromCoordinates(float x, float y){

@@ -18,11 +18,24 @@ public class PathNode {
     public float getValue(){
         return h;
     }
+
+    public float getN() {
+        return n;
+    }
+
     //endregion
 
     //region Setters
     public void setValue(int x, int y){
         h = (float) Math.sqrt(Math.pow(x - tile.getX(), 2) + Math.pow(y - tile.getY(), 2));
+    }
+
+    public void setN(float n) {
+        this.n = n;
+    }
+
+    public void setParent(PathNode parent) {
+        this.parent = parent;
     }
     //endregion
 }
