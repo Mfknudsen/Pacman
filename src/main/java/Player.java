@@ -8,7 +8,7 @@ public class Player extends Map implements Unit {
 
     private float x, y, size = 30;
     private Tile currentTile, nextMoveTo;
-    private float moveSpeed = 0.05f;
+    private float moveSpeed = 0.1f;
     private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right
 
     private boolean wDown = false;

@@ -48,7 +48,7 @@ public class Main extends PApplet {
 
     public void draw() {
         Tile[][] draw = map.getTiles();
-        player1.Update();
+//        player1.Update();
 
         //Redraw Map
         for (Tile[] tileArr : draw) {
