@@ -113,7 +113,8 @@ public class Player implements Unit {
 
         if (currentTile.getTileNeighbors()[pathDirection] != null)
             return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
-                    && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
+                    && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom
+                    && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.None;
         else return false;
     }
 
