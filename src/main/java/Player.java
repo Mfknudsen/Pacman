@@ -63,7 +63,6 @@ public class Player implements Unit {
                 direction = null;
             }
         }
-
         if(nextMoveTo != null && moving) {
             if (x != nextMoveTo.getX()) {
                 int dir = -1;
@@ -83,68 +82,6 @@ public class Player implements Unit {
                 y = nextMoveTo.getY();
                 moving = false;
             }
-        }
-    }
-
-
-
-    private void moveLeft() {
-        direction = Direction.LEFT;
-
-        nextMoveTo = getAvailablePath(currentTile, direction);
-
-        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()){
-            aDown = false;
-            nextMoveTo = null;
-        }
-
-        if(nextMoveTo != null) {
-            move();
-        }
-    }
-
-    private void moveRight() {
-        direction = Direction.RIGHT;
-
-        nextMoveTo = getAvailablePath(currentTile, direction);
-
-        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
-            dDown = false;
-            nextMoveTo = null;
-        }
-
-        if(nextMoveTo != null) {
-            move();
-        }
-    }
-
-    private void moveUp() {
-        direction = Direction.UP;
-
-        nextMoveTo = getAvailablePath(currentTile, direction);
-
-        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
-            wDown = false;
-            nextMoveTo = null;
-        }
-
-        if(nextMoveTo != null) {
-            move();
-        }
-    }
-
-    private void moveDown() {
-        direction = Direction.DOWN;
-
-        nextMoveTo = getAvailablePath(currentTile, direction);
-
-        if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
-            sDown = false;
-            nextMoveTo = null;
-        }
-
-        if(nextMoveTo != null) {
-            move();
         }
     }
 
@@ -202,8 +139,10 @@ public class Player implements Unit {
         else if (direction == Direction.RIGHT)
             pathDirection = 1;
 
+        if (currentTile.getTileNeighbors()[pathDirection] != null)
         return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
                 && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
+        else return false;
     }
 
     public void setX(int x){
