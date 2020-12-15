@@ -49,6 +49,7 @@ public class Player implements Unit {
             else if (movingDirection == Direction.RIGHT)
                 pathDirection = 1;
 
+            if(checkAvailablePath(currentTile, movingDirection))
             if(checkAvailablePath(currentTile.getTileNeighbors()[pathDirection], direction))
             {
                 x2 = currentTile.getTileNeighbors()[pathDirection].getX();
