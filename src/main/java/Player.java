@@ -5,6 +5,7 @@ public class Player implements Unit {
     private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right
     private Direction movingDirection;
     private Direction newDirection;
+    private boolean justTeleported = false;
 
     private boolean wDown = false;
     private boolean aDown = false;
@@ -86,8 +87,6 @@ public class Player implements Unit {
         }
     }
 
-
-
     private void moveLeft() {
         direction = Direction.LEFT;
 
@@ -148,6 +147,32 @@ public class Player implements Unit {
         }
     }
 
+    public void teleportToTile(Tile tile){
+        x = tile.getX();
+        y = tile.getY();
+
+        setCurrentTile(tile);
+        nextMoveTo = null;
+        justTeleported = true;
+    }
+
+    private boolean checkAvailablePath(Tile currentTile, Direction direction){
+
+        int pathDirection = -1;
+        if (direction == Direction.UP)
+            pathDirection = 2;
+        else if (direction == Direction.LEFT)
+            pathDirection = 0;
+        else if (direction == Direction.DOWN)
+            pathDirection = 3;
+        else if (direction == Direction.RIGHT)
+            pathDirection = 1;
+
+        return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+                && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
+    }
+
+    //region Getters
     public float getX() {
         return this.x;
     }
@@ -190,22 +215,13 @@ public class Player implements Unit {
         return root;
     }
 
-    private boolean checkAvailablePath(Tile currentTile, Direction direction){
-
-        int pathDirection = -1;
-        if (direction == Direction.UP)
-            pathDirection = 2;
-        else if (direction == Direction.LEFT)
-            pathDirection = 0;
-        else if (direction == Direction.DOWN)
-            pathDirection = 3;
-        else if (direction == Direction.RIGHT)
-            pathDirection = 1;
-
-        return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
-                && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
+    public boolean getJustTeleported() {
+        return justTeleported;
     }
 
+    //endregion
+
+    //region Setters
     public void setX(int x){
         this.x = x;
     }
@@ -217,6 +233,8 @@ public class Player implements Unit {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
+    //endregion
 
     void onKeyPressed(char ch) {
         if (ch == 'W' || ch == 'w')
