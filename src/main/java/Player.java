@@ -59,9 +59,10 @@ public class Player implements Unit {
                     Math.abs(y - y2) <= 0.1f) {
                 x = x2;
                 y = y2;
-                nextMoveTo = getAvailablePath(Main.map.getTileFromIndex( (int)x, (int)y), newDirection);
-                newPath = false;
+                nextMoveTo = getAvailablePath(Main.map.getTileFromIndex( (int) x, (int) y), newDirection);
+                movingDirection = newDirection;
                 direction = null;
+                newPath = false;
             }
         }
         if(nextMoveTo != null && moving) {
