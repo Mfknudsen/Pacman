@@ -35,7 +35,7 @@ public class Pinky extends Ghost{
                         result = result.getTileNeighbors()[0];
                 }
             }
-            else if(target.getDirection() == Direction.LEFT){
+            else if(target.getDirection() == Direction.LEFT && target.getCurrentTile().getTileNeighbors()[0] != null){
                 if(target.getCurrentTile().getTileNeighbors()[0].getType() == TileType.BLOCKED)
                     target.setDirection(Direction.DOWN);
                 else{
@@ -49,7 +49,7 @@ public class Pinky extends Ghost{
                         result = result.getTileNeighbors()[2];
                 }
             }
-            else{
+            else if (target.getDirection() == Direction.RIGHT && target.getCurrentTile().getTileNeighbors()[1] != null){
                 if(target.getCurrentTile().getTileNeighbors()[1].getType() == TileType.BLOCKED)
                     target.setDirection(Direction.UP);
                 else{

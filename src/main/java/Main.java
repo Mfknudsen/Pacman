@@ -14,7 +14,7 @@ public class Main extends PApplet {
     private int ghostTimer = 0;
     private Tile[] portals = new Tile[2];
 
-    private int timer;
+    private boolean debugMode = false;
 
     public void settings(){
         size(tileSize * (xSize + 1),tileSize * (ySize + 1));
@@ -53,7 +53,7 @@ public class Main extends PApplet {
 
         //Setup Player
         player = new Player();
-        player.setSpawnPoint(1, 14);
+        player.setSpawnPoint(14, 23);
 
         //Set Ghost target to Player
         for (Ghost g: ghost) {
@@ -77,6 +77,8 @@ public class Main extends PApplet {
                 // light green color for portal
                 if (t.getType() == TileType.PORTAL)
                     fill(145, 255, 187);
+                if(t.getType() == TileType.None)
+                    fill(0);
 
                 DrawTile(t);
             }
@@ -170,20 +172,34 @@ public class Main extends PApplet {
             }
         }
 
-        //Debug Coordinates
-        /*
-        for (Tile[] set : draw) {
-            for (Tile tile : set) {
-                fill(0);
-                text("X: " + (tile.getX()),
-                        (tile.getX() * tileSize) + tileSize - (tileSize / 2 - (tileSize * 0.1f)),
-                        (tile.getY() * tileSize) + tileSize - (tileSize / 2) + (tileSize * 0.5f));
-                text("Y: " + (tile.getY()),
-                        (tile.getX() * tileSize) + tileSize - (tileSize / 2 - (tileSize * 0.1f)),
-                        (tile.getY() * tileSize) + tileSize - (tileSize / 2) + (tileSize * 0.75f));
+        //Debug
+        if(debugMode) {
+            for (PathNode node : ghost[0].pathfinder.closedNodes) {
+                fill(255, 0, 0);
+                DrawTile(node.getTile());
+            }
+            for (PathNode node : ghost[0].pathfinder.openNodes) {
+                fill(0, 0, 255);
+                DrawTile(node.getTile());
+            }
+            for (PathNode node : ghost[0].pathfinder.result) {
+                fill(0, 255, 0);
+                DrawTile(node.getTile());
+            }
+
+
+            for (Tile[] set : draw) {
+                for (Tile tile : set) {
+                    fill(0);
+                    text("X: " + (tile.getX()),
+                            (tile.getX() * tileSize) + tileSize - (tileSize / 2 - (tileSize * 0.1f)),
+                            (tile.getY() * tileSize) + tileSize - (tileSize / 2) + (tileSize * 0.5f));
+                    text("Y: " + (tile.getY()),
+                            (tile.getX() * tileSize) + tileSize - (tileSize / 2 - (tileSize * 0.1f)),
+                            (tile.getY() * tileSize) + tileSize - (tileSize / 2) + (tileSize * 0.75f));
+                }
             }
         }
-         */
     }
 
     public void keyPressed(){

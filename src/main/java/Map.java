@@ -194,6 +194,38 @@ public class Map {
                 }
             }
         }
+
+        for (Tile[] set: tiles) {
+            for (Tile t: set){
+                boolean check = true;
+                if(t.getType() != TileType.WALKABLE)
+                    continue;
+
+                for (Pebble p: pebbles){
+                    if(p.getX() == t.getX() && p.getY() == t.getY()){
+                        check = false;
+                        break;
+                    }
+                }
+                for (PowerUp p: powerUps){
+                    if(p.getX() == t.getX() && p.getY() == t.getY()){
+                        check = false;
+                        break;
+                    }
+
+                }
+                for (Fruit p: fruits){
+                    if(p.getX() == t.getX() && p.getY() == t.getY()){
+                        check = false;
+                        break;
+                    }
+                }
+                if(!check)
+                    continue;
+
+                t.setType(TileType.None);
+            }
+        }
     }
 
     public void createFruit(int x, int y){
