@@ -1,32 +1,66 @@
-public class Player extends Map implements Unit {
-    private float x, y, size = 30;
+public class Player implements Unit {
+    private float x, y, x2, y2, size = 30;
     private Tile currentTile, nextMoveTo;
     private float moveSpeed = 0.1f;
     private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right
-
-    private boolean justTeleported;
+    private Direction movingDirection;
+    private Direction newDirection;
 
     private boolean wDown = false;
     private boolean aDown = false;
     private boolean sDown = false;
     private boolean dDown = false;
     private boolean moving = false;
+    private boolean newPath = false;
+    private Tile root;
 
     public void Update() {
         move();
+    }
+
+    public void setSpawnPoint(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setCurrentTile(Tile currentTile) {
+        this.currentTile = currentTile;
     }
 
     public void move() {
         if (!moving && direction != null){
             nextMoveTo = getAvailablePath(currentTile, direction);
             moving = true;
+            movingDirection = direction;
             direction = null;
         }
 
-        if (moving && direction != null){
-            if(checkAvailablePath(currentTile, direction))
+        if (moving && direction != null && !newPath){
+            int pathDirection = -1;
+            if (movingDirection == Direction.UP)
+                pathDirection = 2;
+            else if (movingDirection == Direction.LEFT)
+                pathDirection = 0;
+            else if (movingDirection == Direction.DOWN)
+                pathDirection = 3;
+            else if (movingDirection == Direction.RIGHT)
+                pathDirection = 1;
+
+            if(checkAvailablePath(currentTile.getTileNeighbors()[pathDirection], direction))
             {
-                nextMoveTo = getAvailablePath(currentTile, direction);
+                x2 = currentTile.getTileNeighbors()[pathDirection].getX();
+                y2 = currentTile.getTileNeighbors()[pathDirection].getY();
+                newDirection = direction;
+                newPath = true;
+            }
+        } else if (newPath) {
+            if (Math.abs(x - x2) <= 0.1f &&
+                    Math.abs(y - y2) <= 0.1f) {
+                x = x2;
+                y = y2;
+                nextMoveTo = getAvailablePath(Main.map.getTileFromIndex( (int)x, (int)y), newDirection);
+                newPath = false;
+                direction = null;
             }
         }
 
@@ -114,16 +148,6 @@ public class Player extends Map implements Unit {
         }
     }
 
-    public void teleportToTile(Tile tile){
-        x = tile.getX();
-        y = tile.getY();
-
-        setCurrentTile(tile);
-        nextMoveTo = null;
-        justTeleported = true;
-    }
-
-    //region Getters
     public float getX() {
         return this.x;
     }
@@ -156,12 +180,14 @@ public class Player extends Map implements Unit {
         else if (direction == Direction.RIGHT)
             pathDirection = 1;
 
-        if(currentTile.getTileNeighbors()[pathDirection] != null) {
-            if (currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
-                    && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom)
-                return currentTile.getTileNeighbors()[pathDirection];
-        }
-        return null;
+        root = currentTile;
+
+        if (root.getType() == TileType.PORTAL)
+            return root;
+        else if (currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+                && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom)
+           getAvailablePath(currentTile.getTileNeighbors()[pathDirection], direction);
+        return root;
     }
 
     private boolean checkAvailablePath(Tile currentTile, Direction direction){
@@ -176,28 +202,8 @@ public class Player extends Map implements Unit {
         else if (direction == Direction.RIGHT)
             pathDirection = 1;
 
-        if(currentTile.getTileNeighbors()[pathDirection] != null)
-            return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+        return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
                 && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
-        else
-            return false;
-    }
-
-    public boolean getJustTeleported() {
-        return justTeleported;
-    }
-    //endregion
-
-    //region Setters
-    public void setSpawnPoint(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setCurrentTile(Tile currentTile) {
-        justTeleported = false;
-
-        this.currentTile = currentTile;
     }
 
     public void setX(int x){
@@ -211,7 +217,6 @@ public class Player extends Map implements Unit {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
-    //endregion
 
     void onKeyPressed(char ch) {
         if (ch == 'W' || ch == 'w')
