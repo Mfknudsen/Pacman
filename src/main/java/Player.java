@@ -5,7 +5,12 @@ public class Player implements Unit {
     private Direction direction = Direction.NONE; //2 = Up, 0 = Left, 3 = Down, 1 = Right
     private Direction movingDirection;
     private Direction newDirection;
+
     private boolean justTeleported = false;
+    private Direction portalDir = Direction.NONE;
+
+    private boolean powered = false;
+    private int timer, delay = 300;
 
     private boolean wDown = false;
     private boolean aDown = false;
@@ -17,17 +22,14 @@ public class Player implements Unit {
 
     public void Update() {
         move();
-        if (direction != Direction.NONE)
-        System.out.println(direction);
-    }
 
-    public void setSpawnPoint(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setCurrentTile(Tile currentTile) {
-        this.currentTile = currentTile;
+        if(powered){
+            timer++;
+            if(timer >= delay) {
+                powered = false;
+                timer = 0;
+            }
+        }
     }
 
     public void move() {
@@ -91,12 +93,22 @@ public class Player implements Unit {
         }
     }
 
-    public void teleportToTile(Tile tile){
+    public void teleportToTile(Tile tile, Direction dir){
+        System.out.println("Teleport from:\n"+
+                currentTile.getX() + " ; " + currentTile.getY()+"\n"+
+                tile.getX() + " ; " + tile.getY());
+
         x = tile.getX();
         y = tile.getY();
 
         setCurrentTile(tile);
-        nextMoveTo = null;
+        moving = false;
+        portalDir = dir;
+        newPath = false;
+
+        movingDirection = Direction.LEFT;
+        newDirection = Direction.LEFT;
+
         justTeleported = true;
     }
 
@@ -162,13 +174,14 @@ public class Player implements Unit {
         return root;
     }
 
-
-
     public boolean getJustTeleported() {
         return justTeleported;
 
     }
 
+    public boolean isPowered() {
+        return powered;
+    }
     //endregion
 
     //region Setters
@@ -182,6 +195,21 @@ public class Player implements Unit {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void setSpawnPoint(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setCurrentTile(Tile currentTile) {
+        justTeleported = false;
+
+        this.currentTile = currentTile;
+    }
+
+    public void setPowered(boolean powered) {
+        this.powered = powered;
     }
 
     //endregion
