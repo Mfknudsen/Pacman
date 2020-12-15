@@ -6,7 +6,7 @@ public class Main extends PApplet {
     public static int xSize = 28, ySize = 31;
     public static int gameMapColorVCX = 87;
     private Ghost[] ghost;
-    private Player player1;
+    private Player player;
     private boolean ghostReady = false;
     private int ghostTimer = 0;
 
@@ -23,6 +23,7 @@ public class Main extends PApplet {
         map.createPowerUp(2,29);
         map.SetupMap();
 
+        //Setup Ghosts
         ghost = new Ghost[4];
         Blinky blinky = new Blinky(11,13, 0.25f);
         blinky.setColor(255, 0, 0);
@@ -42,18 +43,20 @@ public class Main extends PApplet {
         clyde.setScatter(map.getTileFromIndex(1, 29));
         ghost[3] = clyde;
 
-        player1 = new Player();
-        player1.setSpawnPoint(14, 23);
+        //Setup Player
+        player = new Player();
+        player.setSpawnPoint(14, 23);
 
+        //Set Ghost target to Player
         for (Ghost g: ghost) {
             if(g != null)
-                g.setTarget(player1);
+                g.setTarget(player);
         }
     }
 
     public void draw() {
         Tile[][] draw = map.getTiles();
-        player1.Update();
+        player.Update();
 
         //Redraw Map
         for (Tile[] tileArr : draw) {
@@ -85,9 +88,9 @@ public class Main extends PApplet {
 
 
         //Update and Draw Player
-        player1.setCurrentTile(map.getTileFromIndex((int) player1.getX(), (int) player1.getY()));
-        player1.Update();
-        DrawPlayer(player1.getX(), player1.getY(), player1.getSize());
+        player.setCurrentTile(map.getTileFromIndex((int) player.getX(), (int) player.getY()));
+        player.Update();
+        DrawPlayer(player.getX(), player.getY(), player.getSize());
 
         //Update and Draw Ghosts
         if (ghostReady) {
@@ -140,7 +143,7 @@ public class Main extends PApplet {
     }
 
     public void keyPressed(){
-        player1.onKeyPressed(key);
+        player.onKeyPressed(key);
     }
 
     public static void main(String[] args){
