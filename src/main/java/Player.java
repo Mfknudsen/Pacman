@@ -85,7 +85,7 @@ public class Player implements Unit {
             }
         }
     }
-    
+
     public void teleportToTile(Tile tile){
         x = tile.getX();
         y = tile.getY();
