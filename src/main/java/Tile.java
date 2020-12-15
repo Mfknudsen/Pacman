@@ -21,6 +21,18 @@ public class Tile {
         return neighbors;
     }
 
+    public Tile getBlockedOrPortal(Tile currentTile, int direction){
+
+        Tile root = currentTile;
+
+        if (currentTile.getTileNeighbors()[direction].getType() != TileType.BLOCKED)
+            if (currentTile.getTileNeighbors()[direction].getType() != TileType.PORTAL)
+                if (currentTile.getTileNeighbors()[direction].getType() != TileType.GhostRoom)
+                   root = getBlockedOrPortal(currentTile.getTileNeighbors()[direction], direction);
+
+        return root;
+    }
+
     public TileType getType() {
         return type;
     }

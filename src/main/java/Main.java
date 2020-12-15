@@ -1,5 +1,8 @@
 import processing.core.PApplet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main extends PApplet {
     public static Map map;
     public static int tileSize = 40;
@@ -9,6 +12,7 @@ public class Main extends PApplet {
     private Player player;
     private boolean ghostReady = false;
     private int ghostTimer = 0;
+    private Tile[] portals = new Tile[2];
 
     private int timer;
 
@@ -22,6 +26,10 @@ public class Main extends PApplet {
         map.createFruit(1,1);
         map.createPowerUp(2,29);
         map.SetupMap();
+
+        //Setup Portals
+        portals[0] = map.getTileFromIndex(0, 14);
+        portals[1] = map.getTileFromIndex(27, 14);
 
         //Setup Ghosts
         ghost = new Ghost[4];
@@ -45,7 +53,7 @@ public class Main extends PApplet {
 
         //Setup Player
         player = new Player();
-        player.setSpawnPoint(14, 23);
+        player.setSpawnPoint(1, 14);
 
         //Set Ghost target to Player
         for (Ghost g: ghost) {
@@ -56,8 +64,6 @@ public class Main extends PApplet {
 
     public void draw() {
         Tile[][] draw = map.getTiles();
-//        player1.Update();
-
 
         //Redraw Map
         for (Tile[] tileArr : draw) {
@@ -88,15 +94,43 @@ public class Main extends PApplet {
         }
 
 
-        //Update and Draw Player
+        //region Update and Draw Player
         player.setCurrentTile(map.getTileFromIndex((int) player.getX(), (int) player.getY()));
         player.Update();
         DrawPlayer(player.getX(), player.getY(), player.getSize());
+        if(!player.getJustTeleported()){
+            if (player.getCurrentTile() == portals[0])
+                player.teleportToTile(portals[1]);
+            else if (player.getCurrentTile() == portals[1])
+                player.teleportToTile(portals[1]);
+        }
+        // - Pebble Collision
+        List<Pebble> toRemovePebble = new ArrayList<Pebble>();
+        for (Pebble p: map.getPebbles()) {
+            if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
+                toRemovePebble.add(p);
+        }
+        map.getPebbles().removeAll(toRemovePebble);
+        // - PowerUp Collision
+        List<PowerUp> toRemovePower = new ArrayList<PowerUp>();
+        for (PowerUp p: map.getPowerUps()) {
+            if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
+                toRemovePower.add(p);
+        }
+        map.getPowerUps().removeAll(toRemovePower);
+        // - Fruit Collision
+        List<Fruit> toRemoveFruit = new ArrayList<Fruit>();
+        for (Fruit p: map.getFruits()) {
+            if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
+                toRemoveFruit.add(p);
+        }
+        map.getFruits().removeAll(toRemoveFruit);
+        //endregion
 
         //Update and Draw Ghosts
         if (ghostReady) {
             if (ghost[0].getState() != GhostState.FLEE)
-                ghostTimer++;
+                //ghostTimer++;
 
             if (ghostTimer % 480 == 1) {
                 for (Ghost g : ghost) {
@@ -122,11 +156,20 @@ public class Main extends PApplet {
 
         for (Ghost g : ghost) {
             if (g != null) {
-                g.setCurrent(map.getTileFromIndex((int) g.getX(), (int) g.getY()));
+                if(map.getTileFromIndex((int) g.getX(), (int) g.getY()) != g.getCurrent())
+                    g.setCurrent(map.getTileFromIndex((int) g.getX(), (int) g.getY()));
                 g.Update();
                 DrawGhost(g.getX(), g.getY(), g.getSize(), g.getColor(), g.getDirection(), g.state);
+
+                if (!g.getJustTeleported()) {
+                    if (g.current == portals[0])
+                        g.teleportToTile(portals[1]);
+                    else if (g.current == portals[1])
+                        g.teleportToTile(portals[1]);
+                }
             }
         }
+
         //Debug Coordinates
         /*
         for (Tile[] set : draw) {

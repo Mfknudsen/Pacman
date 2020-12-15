@@ -22,7 +22,6 @@ public class PathNode {
     public float getN() {
         return n;
     }
-
     //endregion
 
     //region Setters
