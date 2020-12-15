@@ -2,7 +2,7 @@ public class Player implements Unit {
     private float x, y, x2, y2, size = 30;
     private Tile currentTile, nextMoveTo;
     private float moveSpeed = 0.1f;
-    private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right
+    private Direction direction = Direction.NONE; //2 = Up, 0 = Left, 3 = Down, 1 = Right
     private Direction movingDirection;
     private Direction newDirection;
     private boolean justTeleported = false;
@@ -17,6 +17,8 @@ public class Player implements Unit {
 
     public void Update() {
         move();
+        if (direction != Direction.NONE)
+        System.out.println(direction);
     }
 
     public void setSpawnPoint(int x, int y) {
@@ -29,14 +31,14 @@ public class Player implements Unit {
     }
 
     public void move() {
-        if (!moving && direction != null){
+        if (!moving && direction != Direction.NONE){
             nextMoveTo = getAvailablePath(currentTile, direction);
             moving = true;
             movingDirection = direction;
-            direction = null;
+            direction = Direction.NONE;
         }
 
-        if (moving && direction != null && !newPath){
+        if (moving && direction != Direction.NONE && !newPath){
             int pathDirection = -1;
             if (movingDirection == Direction.UP)
                 pathDirection = 2;
@@ -61,7 +63,7 @@ public class Player implements Unit {
                 y = y2;
                 nextMoveTo = getAvailablePath(Main.map.getTileFromIndex( (int) x, (int) y), newDirection);
                 movingDirection = newDirection;
-                direction = null;
+                direction = Direction.NONE;
                 newPath = false;
             }
         }
@@ -83,6 +85,7 @@ public class Player implements Unit {
                 x = nextMoveTo.getX();
                 y = nextMoveTo.getY();
                 moving = false;
+                nextMoveTo = null;
             }
         }
     }
