@@ -1,5 +1,3 @@
-import java.awt.event.KeyEvent;
-
 public class Player extends Map implements Unit {
     private float x, y, size = 30;
     private Tile currentTile, nextMoveTo;
@@ -10,28 +8,10 @@ public class Player extends Map implements Unit {
     private boolean aDown = false;
     private boolean sDown = false;
     private boolean dDown = false;
-    private boolean arrowUpIsDown = false;
-    private boolean arrowLeftIsDown = false;
-    private boolean arrowDownIsDown = false;
-    private boolean arrowRightIsDown = false;
+    private boolean moving = false;
 
     public void Update() {
-        if (wDown && !sDown)
-        {
-            moveUp();
-        }
-         else if (aDown && !dDown)
-        {
-            moveLeft();
-        }
-        else if (sDown && !wDown)
-        {
-            moveDown();
-        }
-        else if (dDown && !aDown)
-        {
-            moveRight();
-        }
+        move();
     }
 
     public void setSpawnPoint(int x, int y) {
@@ -44,7 +24,20 @@ public class Player extends Map implements Unit {
     }
 
     public void move() {
-        if(nextMoveTo != null) {
+        if (!moving && direction != null){
+            nextMoveTo = getAvailablePath(currentTile, direction);
+            moving = true;
+            direction = null;
+        }
+
+        if (moving && direction != null){
+            if(checkAvailablePath(currentTile, direction))
+            {
+                nextMoveTo = getAvailablePath(currentTile, direction);
+            }
+        }
+
+        if(nextMoveTo != null && moving) {
             if (x != nextMoveTo.getX()) {
                 int dir = -1;
                 if (x < nextMoveTo.getX())
@@ -57,19 +50,21 @@ public class Player extends Map implements Unit {
                     dir = 1;
                 y += dir * moveSpeed;
             }
-        }
-        if (Math.abs(x - nextMoveTo.getX()) <= 0.1f &&
-                Math.abs(y - nextMoveTo.getY()) <= 0.1f) {
-            x = nextMoveTo.getX();
-            y = nextMoveTo.getY();
-            nextMoveTo = null;
+            if (Math.abs(x - nextMoveTo.getX()) <= 0.1f &&
+                    Math.abs(y - nextMoveTo.getY()) <= 0.1f) {
+                x = nextMoveTo.getX();
+                y = nextMoveTo.getY();
+                moving = false;
+            }
         }
     }
-    
+
+
+
     private void moveLeft() {
         direction = Direction.LEFT;
 
-        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 0);
+        nextMoveTo = getAvailablePath(currentTile, direction);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()){
             aDown = false;
@@ -84,7 +79,7 @@ public class Player extends Map implements Unit {
     private void moveRight() {
         direction = Direction.RIGHT;
 
-        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 1);
+        nextMoveTo = getAvailablePath(currentTile, direction);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
             dDown = false;
@@ -99,7 +94,7 @@ public class Player extends Map implements Unit {
     private void moveUp() {
         direction = Direction.UP;
 
-        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 2);
+        nextMoveTo = getAvailablePath(currentTile, direction);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
             wDown = false;
@@ -114,7 +109,7 @@ public class Player extends Map implements Unit {
     private void moveDown() {
         direction = Direction.DOWN;
 
-        nextMoveTo = currentTile.getBlockedOrPortal(currentTile, 3);
+        nextMoveTo = getAvailablePath(currentTile, direction);
 
         if(x == nextMoveTo.getX() && y == nextMoveTo.getY()) {
             sDown = false;
@@ -146,6 +141,40 @@ public class Player extends Map implements Unit {
         return direction;
     }
 
+    private Tile getAvailablePath(Tile currentTile, Direction direction){
+
+        int pathDirection = -1;
+        if (direction == Direction.UP)
+            pathDirection = 2;
+        else if (direction == Direction.LEFT)
+            pathDirection = 0;
+        else if (direction == Direction.DOWN)
+            pathDirection = 3;
+        else if (direction == Direction.RIGHT)
+            pathDirection = 1;
+
+        if (currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+                && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom)
+            return currentTile.getTileNeighbors()[pathDirection];
+        return null;
+    }
+
+    private boolean checkAvailablePath(Tile currentTile, Direction direction){
+
+        int pathDirection = -1;
+        if (direction == Direction.UP)
+            pathDirection = 2;
+        else if (direction == Direction.LEFT)
+            pathDirection = 0;
+        else if (direction == Direction.DOWN)
+            pathDirection = 3;
+        else if (direction == Direction.RIGHT)
+            pathDirection = 1;
+
+        return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+                && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
+    }
+
     public void setX(int x){
         this.x = x;
     }
@@ -161,28 +190,16 @@ public class Player extends Map implements Unit {
     void onKeyPressed(char ch) {
         if (ch == 'W' || ch == 'w')
         {
-            wDown = true;
-            sDown = false;
-            aDown = false;
-            dDown = false;
+            direction = Direction.UP;
         } else if (ch == 'A' || ch == 'a')
         {
-            wDown = false;
-            sDown = false;
-            aDown = true;
-            dDown = false;
+            direction = Direction.LEFT;
         } else if (ch == 'S' || ch == 's')
         {
-            wDown = false;
-            sDown = true;
-            aDown = false;
-            dDown = false;
+            direction = Direction.DOWN;
         } else if (ch == 'D' || ch == 'd')
         {
-            wDown = false;
-            sDown = false;
-            aDown = false;
-            dDown = true;
+            direction = Direction.RIGHT;
         }
     }
 

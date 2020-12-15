@@ -147,6 +147,10 @@ public class Main extends PApplet {
         player.onKeyPressed(key);
     }
 
+    public void keyReleased(){
+        player.onKeyReleased(key);
+    }
+
     public static void main(String[] args){
         PApplet.main("Main");
     }
