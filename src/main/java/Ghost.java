@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ghost implements Unit, Scoring{
+public class Ghost implements Unit{
     protected float x, y, size = 30;
     protected float moveSpeed = 0.05f;
     protected float r,g,b;
     protected Tile nextMoveTo;
-    protected Pathfinder pathfinder;
+    public Pathfinder pathfinder;
     protected GhostState state;
     protected Tile current, scatter, spawn;
     protected Player target;
@@ -46,7 +46,7 @@ public class Ghost implements Unit, Scoring{
                 break;
 
             case FLEE:
-                determineTarget(randomNeighborTile(current));
+                determineTarget(pathfinder.randomNeighborTile(current));
                 break;
 
             case RETURN:
@@ -72,8 +72,7 @@ public class Ghost implements Unit, Scoring{
                     currentPath = pathfinder.FindPath();
 
                     if (currentPath.length > 0)
-                        if (currentPath.length > 0)
-                            nextMoveTo = currentPath[currentPath.length - 2].getTile();
+                        nextMoveTo = currentPath[currentPath.length - 1].getTile();
                 }
             }
         }
@@ -102,45 +101,9 @@ public class Ghost implements Unit, Scoring{
         }
     }
 
-    private void updateTarget(){
-
-    }
-
-    public void collision() {
-
-    }
-
     protected void determineTarget(Tile preDetermine){
         pathfinder.setEndTile(preDetermine);
     }
-
-    private Tile randomNeighborTile(Tile input){
-        Tile result;
-        List<Tile> arr = new ArrayList<Tile>();
-
-        for (Tile t: input.getTileNeighbors()) {
-            if(t != null) {
-                if (t.getType() != TileType.BLOCKED){
-                    if(pathfinder.getPreTile() != null) {
-                        if(!(t.getX() == pathfinder.getPreTile().getX() && t.getY() == pathfinder.getPreTile().getY()))
-                            arr.add(t);
-                    }
-                    else
-                        arr.add(t);
-                }
-            }
-        }
-
-        int index = (int) (Math.random() * 3);
-        if(index >= arr.size())
-            index = arr.size() - 1;
-        if(index < 0)
-            index = 0;
-        result = arr.get(index);
-
-        return result;
-    }
-
     //region Setters
     public void setTarget(Player target) {
         if (target != null) {
