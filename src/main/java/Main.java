@@ -13,6 +13,7 @@ public class Main extends PApplet {
     private boolean ghostReady = false;
     private int ghostTimer = 0;
     private Tile[] portals = new Tile[2];
+    private boolean gameOver = false, gameWon = false;
 
     private boolean debugMode = false;
 
@@ -65,7 +66,7 @@ public class Main extends PApplet {
     public void draw() {
         Tile[][] draw = map.getTiles();
 
-        //Redraw Map
+        //region Redraw Map
         for (Tile[] tileArr : draw) {
             for (Tile t : tileArr) {
                 fill(255);
@@ -83,8 +84,9 @@ public class Main extends PApplet {
                 DrawTile(t);
             }
         }
+        //endregion
 
-        //Draw Pebbles, PowerUps and Fruits
+        //region Draw Pebbles, PowerUps and Fruits
         for (Pebble p : map.getPebbles()) {
             DrawPebble(p.getX(), p.getY());
         }
@@ -94,43 +96,46 @@ public class Main extends PApplet {
         for(Fruit f : map.getFruits()){
             DrawFruits(f.getX(), f.getY());
         }
-
-
-        //region Update and Draw Player
-        player.setCurrentTile(map.getTileFromIndex((int) player.getX(), (int) player.getY()));
-        player.Update();
-        DrawPlayer(player.getX(), player.getY(), player.getSize());
-        if(!player.getJustTeleported()){
-            if (player.getCurrentTile() == portals[0])
-                player.teleportToTile(portals[1]);
-            else if (player.getCurrentTile() == portals[1])
-                player.teleportToTile(portals[1]);
-        }
-        // - Pebble Collision
-        List<Pebble> toRemovePebble = new ArrayList<Pebble>();
-        for (Pebble p: map.getPebbles()) {
-            if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
-                toRemovePebble.add(p);
-        }
-        map.getPebbles().removeAll(toRemovePebble);
-        // - PowerUp Collision
-        List<PowerUp> toRemovePower = new ArrayList<PowerUp>();
-        for (PowerUp p: map.getPowerUps()) {
-            if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
-                toRemovePower.add(p);
-        }
-        map.getPowerUps().removeAll(toRemovePower);
-        // - Fruit Collision
-        List<Fruit> toRemoveFruit = new ArrayList<Fruit>();
-        for (Fruit p: map.getFruits()) {
-            if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
-                toRemoveFruit.add(p);
-        }
-        map.getFruits().removeAll(toRemoveFruit);
         //endregion
 
-        //Update and Draw Ghosts
-        if (ghostReady) {
+        //region Update and Draw Player
+        if(!gameOver) {
+            player.setCurrentTile(map.getTileFromIndex((int) player.getX(), (int) player.getY()));
+            player.Update();
+
+            if(!player.getJustTeleported()){
+                if (player.getCurrentTile() == portals[0])
+                    player.teleportToTile(portals[1]);
+                else if (player.getCurrentTile() == portals[1])
+                    player.teleportToTile(portals[1]);
+            }
+            // - Pebble Collision
+            List<Pebble> toRemovePebble = new ArrayList<Pebble>();
+            for (Pebble p: map.getPebbles()) {
+                if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
+                    toRemovePebble.add(p);
+            }
+            map.getPebbles().removeAll(toRemovePebble);
+            // - PowerUp Collision
+            List<PowerUp> toRemovePower = new ArrayList<PowerUp>();
+            for (PowerUp p: map.getPowerUps()) {
+                if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
+                    toRemovePower.add(p);
+            }
+            map.getPowerUps().removeAll(toRemovePower);
+            // - Fruit Collision
+            List<Fruit> toRemoveFruit = new ArrayList<Fruit>();
+            for (Fruit p: map.getFruits()) {
+                if(player.getCurrentTile().getX() == p.getX() && player.getCurrentTile().getY() == p.getY())
+                    toRemoveFruit.add(p);
+            }
+            map.getFruits().removeAll(toRemoveFruit);
+        }
+        DrawPlayer(player.getX(), player.getY(), player.getSize());
+        //endregion
+
+        //region Update and Draw Ghosts
+        if (ghostReady && ghost[0] != null) {
             if (ghost[0].getState() != GhostState.FLEE)
                 //ghostTimer++;
 
@@ -158,9 +163,11 @@ public class Main extends PApplet {
 
         for (Ghost g : ghost) {
             if (g != null) {
-                if(map.getTileFromIndex((int) g.getX(), (int) g.getY()) != g.getCurrent())
-                    g.setCurrent(map.getTileFromIndex((int) g.getX(), (int) g.getY()));
-                g.Update();
+                if(!gameOver) {
+                    if (map.getTileFromIndex((int) g.getX(), (int) g.getY()) != g.getCurrent())
+                        g.setCurrent(map.getTileFromIndex((int) g.getX(), (int) g.getY()));
+                    g.Update();
+                }
                 DrawGhost(g.getX(), g.getY(), g.getSize(), g.getColor(), g.getDirection(), g.state);
 
                 if (!g.getJustTeleported()) {
@@ -171,8 +178,31 @@ public class Main extends PApplet {
                 }
             }
         }
+        //endregion
 
-        //Debug
+        //region Check Game State
+        if(map.getPebbles().size() == 0){
+            gameOver = true;
+            gameWon = true;
+        }
+        else{
+            for (Ghost g: ghost){
+                if(g != null){
+                    if(g.getCurrent() == player.getCurrentTile()){
+                        gameOver = true;
+                        break;
+                    }
+                }
+            }
+        }
+        //endregion
+
+        //region Gamer Over
+        if(gameOver)
+            DrawGameOver();
+        //endregion
+
+        //region Debug
         if(debugMode) {
             for (PathNode node : ghost[0].pathfinder.closedNodes) {
                 fill(255, 0, 0);
@@ -200,6 +230,7 @@ public class Main extends PApplet {
                 }
             }
         }
+        //endregion
     }
 
     public void keyPressed(){
@@ -291,5 +322,28 @@ public class Main extends PApplet {
         ellipse((x * tileSize + tileSize),
                 (y * tileSize + tileSize),
                 15, 15);
+    }
+
+    private void DrawGameOver(){
+        fill(0);
+        int sizeX = 500, sizeY = 250, border = 25;
+        rect(width / 2 - sizeX / 2,
+                height / 2 - sizeY / 2,
+                sizeX,
+                sizeY);
+        fill(255);
+        rect(width / 2 - sizeX / 2 + border,
+                height / 2 - sizeY / 2 + border,
+                sizeX - border * 2,
+                sizeY - border * 2);
+
+        fill(0);
+        textSize(55);
+        textAlign(CENTER, CENTER);
+        String display = "You Lose!";
+        if(gameWon)
+            display = "You Win!";
+
+        text(display, width/2, height/2);
     }
 }
