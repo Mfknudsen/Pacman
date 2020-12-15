@@ -20,7 +20,7 @@ public class Main extends PApplet {
         map = new Map();
         //Setup Fruits and PowerUps
         map.createFruit(1,1);
-        map.createPowerUp(2,3);
+        map.createPowerUp(2,29);
         map.SetupMap();
 
         ghost = new Ghost[4];
@@ -72,12 +72,15 @@ public class Main extends PApplet {
             }
         }
 
-        //Draw Pebbles and PowerUps
+        //Draw Pebbles, PowerUps and Fruits
         for (Pebble p : map.getPebbles()) {
             DrawPebble(p.getX(), p.getY());
         }
         for (PowerUp p : map.getPowerUps()) {
             DrawPowerUp(p.getX(), p.getY());
+        }
+        for(Fruit f : map.getFruits()){
+            DrawFruits(f.getX(), f.getY());
         }
 
 
@@ -213,6 +216,13 @@ public class Main extends PApplet {
         fill(175, 0, 0);
         ellipse((x * tileSize + tileSize),
                 (y * tileSize + tileSize),
-                10.0f, 10.0f);
+                15, 15);
+    }
+
+    private void DrawFruits(float x, float y){
+        fill(50, 255, 50);
+        ellipse((x * tileSize + tileSize),
+                (y * tileSize + tileSize),
+                15, 15);
     }
 }

@@ -219,6 +219,10 @@ public class Map {
         return pebbles;
     }
 
+    public List<Fruit> getFruits() {
+        return fruits;
+    }
+
     public Tile getTileFromCoordinates(float x, float y){
 
         for (Tile[] set: tiles) {
