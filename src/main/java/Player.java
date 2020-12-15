@@ -4,6 +4,8 @@ public class Player extends Map implements Unit {
     private float moveSpeed = 0.1f;
     private Direction direction; //2 = Up, 0 = Left, 3 = Down, 1 = Right
 
+    private boolean justTeleported;
+
     private boolean wDown = false;
     private boolean aDown = false;
     private boolean sDown = false;
@@ -12,15 +14,6 @@ public class Player extends Map implements Unit {
 
     public void Update() {
         move();
-    }
-
-    public void setSpawnPoint(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setCurrentTile(Tile currentTile) {
-        this.currentTile = currentTile;
     }
 
     public void move() {
@@ -121,6 +114,16 @@ public class Player extends Map implements Unit {
         }
     }
 
+    public void teleportToTile(Tile tile){
+        x = tile.getX();
+        y = tile.getY();
+
+        setCurrentTile(tile);
+        nextMoveTo = null;
+        justTeleported = true;
+    }
+
+    //region Getters
     public float getX() {
         return this.x;
     }
@@ -153,9 +156,11 @@ public class Player extends Map implements Unit {
         else if (direction == Direction.RIGHT)
             pathDirection = 1;
 
-        if (currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
-                && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom)
-            return currentTile.getTileNeighbors()[pathDirection];
+        if(currentTile.getTileNeighbors()[pathDirection] != null) {
+            if (currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+                    && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom)
+                return currentTile.getTileNeighbors()[pathDirection];
+        }
         return null;
     }
 
@@ -171,8 +176,28 @@ public class Player extends Map implements Unit {
         else if (direction == Direction.RIGHT)
             pathDirection = 1;
 
-        return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
+        if(currentTile.getTileNeighbors()[pathDirection] != null)
+            return currentTile.getTileNeighbors()[pathDirection].getType() != TileType.BLOCKED
                 && currentTile.getTileNeighbors()[pathDirection].getType() != TileType.GhostRoom;
+        else
+            return false;
+    }
+
+    public boolean getJustTeleported() {
+        return justTeleported;
+    }
+    //endregion
+
+    //region Setters
+    public void setSpawnPoint(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setCurrentTile(Tile currentTile) {
+        justTeleported = false;
+
+        this.currentTile = currentTile;
     }
 
     public void setX(int x){
@@ -186,6 +211,7 @@ public class Player extends Map implements Unit {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+    //endregion
 
     void onKeyPressed(char ch) {
         if (ch == 'W' || ch == 'w')

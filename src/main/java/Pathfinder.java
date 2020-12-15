@@ -182,7 +182,7 @@ public class Pathfinder {
     }
 
     public Tile randomNeighborTile(Tile input){
-        Tile result;
+        Tile result = null;
         List<Tile> arr = new ArrayList<Tile>();
 
         for (Tile t: input.getTileNeighbors()) {
@@ -203,7 +203,9 @@ public class Pathfinder {
             index = arr.size() - 1;
         if(index < 0)
             index = 0;
-        result = arr.get(index);
+
+        if(arr.size() > 0)
+            result = arr.get(index);
 
         return result;
     }
@@ -219,6 +221,10 @@ public class Pathfinder {
 
     public void setEndTile(Tile endTile) {
         this.endTile = endTile;
+    }
+
+    public void setPreTile(Tile preTile) {
+        this.preTile = preTile;
     }
     //endregion
 

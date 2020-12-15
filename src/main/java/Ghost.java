@@ -12,6 +12,7 @@ public class Ghost implements Unit{
     protected Player target;
     protected PathNode[] currentPath;
     protected Direction direction;
+    protected boolean justTeleported = false;
 
     //Wait timer
     float timer, delayTime;
@@ -57,7 +58,7 @@ public class Ghost implements Unit{
         }
 
         if(state != GhostState.WAIT) {
-            if(nextMoveTo != null) {
+            if (nextMoveTo != null) {
                 move();
 
                 if (Math.abs(x - nextMoveTo.getX()) <= 0.1f &&
@@ -66,13 +67,13 @@ public class Ghost implements Unit{
                     y = nextMoveTo.getY();
                     nextMoveTo = null;
                 }
-            }
-            else {
-                if(current != null) {
+            } else {
+                if (current != null) {
                     currentPath = pathfinder.FindPath();
 
-                    if (currentPath.length > 0)
+                    if (currentPath.length > 0) {
                         nextMoveTo = currentPath[currentPath.length - 1].getTile();
+                    }
                 }
             }
         }
@@ -88,7 +89,6 @@ public class Ghost implements Unit{
                     direction = Direction.RIGHT;
                 }
                 x += dir * moveSpeed;
-
             } else if (y != nextMoveTo.getY()) {
                 int dir = -1;
                 direction = Direction.UP;
@@ -104,6 +104,16 @@ public class Ghost implements Unit{
     protected void determineTarget(Tile preDetermine){
         pathfinder.setEndTile(preDetermine);
     }
+
+    public void teleportToTile(Tile tile){
+        x = tile.getX();
+        y = tile.getY();
+
+        setCurrent(tile);
+        nextMoveTo = null;
+        justTeleported = true;
+    }
+
     //region Setters
     public void setTarget(Player target) {
         if (target != null) {
@@ -112,6 +122,8 @@ public class Ghost implements Unit{
     }
 
     public void setCurrent(Tile current) {
+        justTeleported = false;
+
         this.current = current;
 
         pathfinder.setStartTile(this.current);
@@ -133,16 +145,16 @@ public class Ghost implements Unit{
     //endregion
 
     //region Getters
+    public Tile getCurrent() {
+        return current;
+    }
+
     public float getX() {
         return this.x;
     }
 
     public float getY() {
         return this.y;
-    }
-
-    public int addScore() {
-        return 0;
     }
 
     public int getSize() {
@@ -159,6 +171,10 @@ public class Ghost implements Unit{
 
     public GhostState getState() {
         return state;
+    }
+
+    public boolean getJustTeleported() {
+        return justTeleported;
     }
     //endregion
 }
